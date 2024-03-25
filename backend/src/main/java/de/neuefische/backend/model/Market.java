@@ -1,8 +1,6 @@
 package de.neuefische.backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,7 +8,9 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
+@Builder
 public class Market {
+    private String marketId;
     private String name;
     private BigDecimal balance;
     private int maximumStorage;
@@ -18,5 +18,4 @@ public class Market {
     private int maximumShelfSpace;
     private int currentShelfSpace;
     private List<Product> products;
-
 }
