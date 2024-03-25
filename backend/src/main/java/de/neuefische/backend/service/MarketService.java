@@ -7,15 +7,12 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class MarketService {
     private final MarketRepository marketRepository;
-    private static int marketIdCounter = 0;
-    public static synchronized void incrementMarketIdCounter() {
-        marketIdCounter++;
-    }
 
     public List<Market> getAllMarkets() {
         return marketRepository.findAll();
@@ -23,7 +20,7 @@ public class MarketService {
 
     public Market addNewMarket(String marketName) {
         Market market = Market.builder()
-                .marketId(String.valueOf(marketIdCounter))
+                .marketId(null)
                 .name(marketName)
                 .balance(new BigDecimal(100))
                 .currentShelfSpace(0)
@@ -32,8 +29,28 @@ public class MarketService {
                 .maximumStorage(50)
                 .products(List.of())
                 .build();
-        incrementMarketIdCounter();
         marketRepository.save(market);
         return market;
+    }
+
+    public Market renameMarket(String marketId, String newMarketName) {
+        List<Market> markets = marketRepository.findAll();
+        Market marketToUpdate = markets.stream().filter(market -> Objects.equals(market.getMarketId(), marketId)).findFirst().orElseThrow();
+        Market updatedMarket = Market.builder()
+                .marketId(marketId)
+                .name(newMarketName)
+                .balance(marketToUpdate.getBalance())
+                .currentShelfSpace(marketToUpdate.getCurrentShelfSpace())
+                .maximumShelfSpace(marketToUpdate.getMaximumShelfSpace())
+                .currentStorage(marketToUpdate.getCurrentStorage())
+                .maximumStorage(marketToUpdate.getMaximumStorage())
+                .products(marketToUpdate.getProducts())
+                .build();
+        marketRepository.save(updatedMarket);
+        return updatedMarket;
+    }
+
+    public void deleteMarket(String marketId) {
+        marketRepository.deleteById(marketId);
     }
 }

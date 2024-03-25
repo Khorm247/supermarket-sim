@@ -25,4 +25,13 @@ public class MarketController {
         return marketService.addNewMarket(marketName);
     }
 
+    @PutMapping("/{marketId}")
+    public Market addShelfSpace(@PathVariable String marketId, @RequestBody String newMarketName){
+        return marketService.renameMarket(marketId, newMarketName);
+    }
+
+    @DeleteMapping("/{marketId}")
+    public void deleteStorageSpace(@PathVariable String marketId){
+        marketService.deleteMarket(marketId);
+    }
 }

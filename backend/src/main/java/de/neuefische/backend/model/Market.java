@@ -1,6 +1,7 @@
 package de.neuefische.backend.model;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @Builder
 public class Market {
+    @Id
     private String marketId;
     private String name;
     private BigDecimal balance;
