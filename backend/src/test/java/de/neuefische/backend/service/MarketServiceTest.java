@@ -51,7 +51,7 @@ class MarketServiceTest {
     void addNewMarket_whenGivenMarketName_ThenReturnNewMarket() {
         // Given
         String marketName = "Market1";
-        Market expected = new Market("1", marketName, new BigDecimal(100), 50, 0, 10, 0, List.of());
+        Market expected = new Market(null, marketName, new BigDecimal(100), 50, 0, 10, 0, List.of());
         // When
         when(mockMarketRepository.save(any())).thenReturn(expected);
         Market actual = marketService.addNewMarket(marketName);
