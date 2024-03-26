@@ -4,9 +4,11 @@ import de.neuefische.backend.model.Market;
 import de.neuefische.backend.service.MarketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/market")
@@ -15,23 +17,28 @@ public class MarketController {
     private final MarketService marketService;
 
     @GetMapping
-    public List<Market> getAllStorageSpaces() {
+    public List<Market> getAllMarkets() {
         return marketService.getAllMarkets();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Market addNewStorageSpace(@RequestBody String marketName){
+    public Market addNewMarket(@RequestBody String marketName){
         return marketService.addNewMarket(marketName);
     }
 
     @PutMapping("/{marketId}")
-    public Market addShelfSpace(@PathVariable String marketId, @RequestBody String newMarketName){
+    public Market renameMarket(@PathVariable String marketId, @RequestBody String newMarketName){
         return marketService.renameMarket(marketId, newMarketName);
     }
 
     @DeleteMapping("/{marketId}")
-    public void deleteStorageSpace(@PathVariable String marketId){
-        marketService.deleteMarket(marketId);
+    public ResponseEntity<Void> deleteMarket(@PathVariable String marketId){
+        try {
+            marketService.deleteMarket(marketId);
+            return ResponseEntity.ok().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
