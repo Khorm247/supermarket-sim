@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
-@Getter
+@Data
 public class Market {
     @Id
     private String marketId;
