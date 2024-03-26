@@ -8,8 +8,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Data
 @Builder
+@Getter
 public class Market {
     @Id
     private String marketId;
@@ -20,4 +20,5 @@ public class Market {
     private int maximumShelfSpace;
     private int currentShelfSpace;
     private List<Product> products;
+
 }
