@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
@@ -39,12 +38,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> deleteMarket(@PathVariable String productId){
-        try {
-            productService.deleteProduct(productId);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<String> deleteMarket(@PathVariable String productId){
+        return productService.deleteProduct(productId);
     }
 }

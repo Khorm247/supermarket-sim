@@ -4,6 +4,8 @@ import de.neuefische.backend.model.Product;
 import de.neuefische.backend.model.ProductDto;
 import de.neuefische.backend.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,10 +53,12 @@ public class ProductService {
         return updatedProduct;
     }
 
-    public void deleteProduct(String productId) {
+    public ResponseEntity<String> deleteProduct(String productId) {
         if (!productRepository.existsById(productId)) {
-            throw new NoSuchElementException(String.format(NO_PRODUCT_FOUND, productId));
+            return new ResponseEntity<>("Market not found", HttpStatus.NOT_FOUND);
         }
+
         productRepository.deleteById(productId);
+        return new ResponseEntity<>("Market deleted", HttpStatus.OK);
     }
 }
