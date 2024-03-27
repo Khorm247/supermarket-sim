@@ -13,14 +13,17 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
+    private static final String NO_PRODUCT_FOUND = "Product with id %s does not exist";
 
-    public List<Product> listProducts() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+    public Product getProductById(String productId) {
+        return productRepository.findById(productId).orElseThrow(() -> new NoSuchElementException(String.format(NO_PRODUCT_FOUND, productId)));
     }
 
     public Product addProduct(ProductDto productDto) {
         Product product = Product.builder()
-                .productId(null)
                 .name(productDto.name())
                 .producer(productDto.producer())
                 .pricePerBox(productDto.pricePerBox())
@@ -33,13 +36,24 @@ public class ProductService {
         return product;
     }
 
-    public Product getProductById(String productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new NoSuchElementException("Product with id " + productId + " does not exist"));
+    public Product updateProduct(String productId, ProductDto updatedProductDto) {
+        Product productToUpdate = productRepository.findById(productId).orElseThrow(() -> new NoSuchElementException(String.format(NO_PRODUCT_FOUND, productId)));
+        Product updatedProduct = Product.builder()
+                .productId(productId)
+                .name(updatedProductDto.name())
+                .producer(updatedProductDto.producer())
+                .pricePerBox(updatedProductDto.pricePerBox())
+                .fairMarketValue(updatedProductDto.fairMarketValue())
+                .yourPrice(productToUpdate.getFairMarketValue())
+                .itemsPerBox(updatedProductDto.itemsPerBox())
+                .build();
+        productRepository.save(updatedProduct);
+        return updatedProduct;
     }
 
     public void deleteProduct(String productId) {
         if (!productRepository.existsById(productId)) {
-            throw new NoSuchElementException("Product with id " + productId + " does not exist");
+            throw new NoSuchElementException(String.format(NO_PRODUCT_FOUND, productId));
         }
         productRepository.deleteById(productId);
     }
