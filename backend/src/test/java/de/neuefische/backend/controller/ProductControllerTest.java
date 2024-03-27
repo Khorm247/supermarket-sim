@@ -69,6 +69,20 @@ class ProductControllerTest {
     }
 
     @Test
+    void getProductById_whenGivenWrongId_thenReturnNotFound() throws Exception {
+        // Given
+        String id = "nonExistentId";
+        ResponseEntity<Product> expectedResponse = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        // When
+        when(productService.getProductById(id)).thenReturn(expectedResponse);
+
+        // Then
+        mvc.perform(get("/api/products/" + id))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
     void createProduct_whenGivenProductDto_thenReturnCreatedProduct() throws Exception {
         // Given
         ProductDto productDto = new ProductDto("Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), 12);

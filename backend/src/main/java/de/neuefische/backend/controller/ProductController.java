@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public Product getProductById(@PathVariable String productId){
+    public ResponseEntity<Product> getProductById(@PathVariable String productId){
         return productService.getProductById(productId);
     }
 

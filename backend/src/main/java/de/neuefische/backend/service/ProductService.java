@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +21,10 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
-    public Product getProductById(String productId) {
-        return productRepository.findById(productId).orElseThrow(() -> new NoSuchElementException(String.format(NO_PRODUCT_FOUND, productId)));
+    public ResponseEntity<Product> getProductById(String productId) {
+        Optional<Product> productOptional = productRepository.findById(productId);
+        return productOptional.map(product -> new ResponseEntity<>(product, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     public Product addProduct(ProductDto productDto) {
