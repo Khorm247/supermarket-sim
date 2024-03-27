@@ -62,6 +62,34 @@ class MarketControllerTest {
     }
 
     @Test
+    void renameMarket_whenGivenCorrectId_thenRenameMarket() throws Exception {
+        // Given
+        String marketName = "marketName";
+        MvcResult marketJson = mvc.perform(post("/api/market")
+                .contentType("application/json")
+                .content(marketName))
+                .andExpect(status().isCreated())
+                .andReturn();
+        Market market = objectMapper.readValue(marketJson.getResponse().getContentAsString(), Market.class);
+
+        String newMarketName = "newMarketName";
+
+        // When
+        mvc.perform(MockMvcRequestBuilders.put("/api/market/" + market.getMarketId())
+                .contentType("application/json")
+                .content(newMarketName))
+                .andExpect(status().isOk());
+
+        // Then
+        MvcResult resultJson = mvc.perform(get("/api/market"))
+                .andExpect(status().isOk())
+                .andReturn();
+        List<Market> result = List.of(objectMapper.readValue(resultJson.getResponse().getContentAsString(), Market[].class));
+
+        assertEquals(newMarketName, result.getFirst().getName());
+    }
+
+    @Test
     void deleteMarket_whenGivenWrongId_thenThrowError() throws Exception {
         // Given
         String id = "nonExistentId";
