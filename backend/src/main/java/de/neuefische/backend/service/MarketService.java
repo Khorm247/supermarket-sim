@@ -20,7 +20,6 @@ public class MarketService {
 
     public Market addNewMarket(String marketName) {
         Market market = Market.builder()
-                .marketId(null)
                 .name(marketName)
                 .balance(new BigDecimal(100))
                 .currentShelfSpace(0)
