@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -51,10 +50,12 @@ public class MarketService {
         return updatedMarket;
     }
 
-    public void deleteMarket(String marketId) {
+    public String deleteMarket(String marketId) {
         if (!marketRepository.existsById(marketId)) {
-            throw new NoSuchElementException("Market with id " + marketId + " does not exist");
+            return "Market not found";
         }
+
         marketRepository.deleteById(marketId);
+        return "Market deleted";
     }
 }
