@@ -91,12 +91,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <excludes>
-                        <!-- Exclude Lombok generated code -->
-                        <exclude>*__*</exclude>
-                    </excludes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
