@@ -55,10 +55,10 @@ public class ProductService {
 
     public ResponseEntity<String> deleteProduct(String productId) {
         if (!productRepository.existsById(productId)) {
-            return new ResponseEntity<>("Market not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
         }
 
         productRepository.deleteById(productId);
-        return new ResponseEntity<>("Market deleted", HttpStatus.OK);
+        return new ResponseEntity<>("Product deleted", HttpStatus.OK);
     }
 }
