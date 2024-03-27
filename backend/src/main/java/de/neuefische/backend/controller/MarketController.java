@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/market")
+@RequestMapping("/api/markets")
 @RequiredArgsConstructor
 public class MarketController {
     private final MarketService marketService;
