@@ -33,7 +33,7 @@ class MarketControllerTest {
 
     @Test
     void getAllMarkets_whenNoMarketsExist_thenReturnEmptyList() throws Exception {
-        mvc.perform(get("/api/market"))
+        mvc.perform(get("/api/markets"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
     }
@@ -43,7 +43,7 @@ class MarketControllerTest {
         // Given
         String marketName = "marketName";
 
-        MvcResult expectedJson = mvc.perform(post("/api/market")
+        MvcResult expectedJson = mvc.perform(post("/api/markets")
                         .contentType("application/json")
                         .content(marketName))
                 .andExpect(status().isCreated())
@@ -52,7 +52,7 @@ class MarketControllerTest {
         List<Market> expected = List.of(objectMapper.readValue(expectedJson.getResponse().getContentAsString(), Market.class));
 
         // When
-        MvcResult resultJson = mvc.perform(get("/api/market"))
+        MvcResult resultJson = mvc.perform(get("/api/markets"))
                 .andExpect(status().isOk())
                 .andReturn();
         List<Market> result = List.of(objectMapper.readValue(resultJson.getResponse().getContentAsString(), Market[].class));
@@ -65,7 +65,7 @@ class MarketControllerTest {
     void renameMarket_whenGivenCorrectId_thenRenameMarket() throws Exception {
         // Given
         String marketName = "marketName";
-        MvcResult marketJson = mvc.perform(post("/api/market")
+        MvcResult marketJson = mvc.perform(post("/api/markets")
                 .contentType("application/json")
                 .content(marketName))
                 .andExpect(status().isCreated())
@@ -75,13 +75,13 @@ class MarketControllerTest {
         String newMarketName = "newMarketName";
 
         // When
-        mvc.perform(MockMvcRequestBuilders.put("/api/market/" + market.getMarketId())
+        mvc.perform(MockMvcRequestBuilders.put("/api/markets/" + market.getId())
                 .contentType("application/json")
                 .content(newMarketName))
                 .andExpect(status().isOk());
 
         // Then
-        MvcResult resultJson = mvc.perform(get("/api/market"))
+        MvcResult resultJson = mvc.perform(get("/api/markets"))
                 .andExpect(status().isOk())
                 .andReturn();
         List<Market> result = List.of(objectMapper.readValue(resultJson.getResponse().getContentAsString(), Market[].class));
@@ -90,20 +90,21 @@ class MarketControllerTest {
     }
 
     @Test
-    void deleteMarket_whenGivenWrongId_thenThrowError() throws Exception {
+    void deleteMarket_whenGivenWrongId_thenReturnNotFoundMessage() throws Exception {
         // Given
         String id = "nonExistentId";
 
         // When & Then
-        mvc.perform(MockMvcRequestBuilders.delete("/api/market/" + id))
-            .andExpect(status().isNotFound());
+        mvc.perform(MockMvcRequestBuilders.delete("/api/markets/" + id))
+            .andExpect(status().isNotFound())
+            .andExpect(MockMvcResultMatchers.content().string("Market not found"));
     }
 
     @Test
     void deleteMarket_whenGivenCorrectId_thenDeleteMarket() throws Exception {
         // Given
         String marketName = "marketName";
-        MvcResult marketJson = mvc.perform(post("/api/market")
+        MvcResult marketJson = mvc.perform(post("/api/markets")
                 .contentType("application/json")
                 .content(marketName))
                 .andExpect(status().isCreated())
@@ -111,11 +112,12 @@ class MarketControllerTest {
         Market market = objectMapper.readValue(marketJson.getResponse().getContentAsString(), Market.class);
 
         // When
-        mvc.perform(MockMvcRequestBuilders.delete("/api/market/" + market.getMarketId()))
-                .andExpect(status().isOk());
+        mvc.perform(MockMvcRequestBuilders.delete("/api/markets/" + market.getId()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Market deleted"));
 
         // Then
-        mvc.perform(get("/api/market"))
+        mvc.perform(get("/api/markets"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json("[]"));
     }

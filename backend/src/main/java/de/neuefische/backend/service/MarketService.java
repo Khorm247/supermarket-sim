@@ -3,11 +3,12 @@ package de.neuefische.backend.service;
 import de.neuefische.backend.model.Market;
 import de.neuefische.backend.repository.MarketRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -21,7 +22,6 @@ public class MarketService {
 
     public Market addNewMarket(String marketName) {
         Market market = Market.builder()
-                .marketId(null)
                 .name(marketName)
                 .balance(new BigDecimal(100))
                 .currentShelfSpace(0)
@@ -36,9 +36,9 @@ public class MarketService {
 
     public Market renameMarket(String marketId, String newMarketName) {
         List<Market> markets = marketRepository.findAll();
-        Market marketToUpdate = markets.stream().filter(market -> Objects.equals(market.getMarketId(), marketId)).findFirst().orElseThrow();
+        Market marketToUpdate = markets.stream().filter(market -> Objects.equals(market.getId(), marketId)).findFirst().orElseThrow();
         Market updatedMarket = Market.builder()
-                .marketId(marketId)
+                .id(marketId)
                 .name(newMarketName)
                 .balance(marketToUpdate.getBalance())
                 .currentShelfSpace(marketToUpdate.getCurrentShelfSpace())
@@ -51,10 +51,12 @@ public class MarketService {
         return updatedMarket;
     }
 
-    public void deleteMarket(String marketId) {
+    public ResponseEntity<String> deleteMarket(String marketId) {
         if (!marketRepository.existsById(marketId)) {
-            throw new NoSuchElementException("Market with id " + marketId + " does not exist");
+            return new ResponseEntity<>("Market not found", HttpStatus.NOT_FOUND);
         }
+
         marketRepository.deleteById(marketId);
+        return new ResponseEntity<>("Market deleted", HttpStatus.OK);
     }
 }

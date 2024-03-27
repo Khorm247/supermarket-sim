@@ -3,10 +3,11 @@ package de.neuefische.backend.service;
 import de.neuefische.backend.model.Market;
 import de.neuefische.backend.repository.MarketRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -80,26 +81,35 @@ class MarketServiceTest {
     }
 
     @Test
-    void deleteMarket_whenGivenMarketId_thenDeleteMarket() {
-        String marketId = "1";
+    void deleteMarket_whenGivenWrongId_thenReturnNotFoundMessage() {
+        // Given
+        String id = "nonExistentId";
+
         // When
-        when(mockMarketRepository.existsById(marketId)).thenReturn(true);
-        marketService.deleteMarket(marketId);
+        when(mockMarketRepository.existsById(id)).thenReturn(false);
+        ResponseEntity<String> response = marketService.deleteMarket(id);
+
         // Then
-        verify(mockMarketRepository).existsById(marketId);
-        verify(mockMarketRepository).deleteById(marketId);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Market not found", response.getBody());
+        verify(mockMarketRepository).existsById(id);
         verifyNoMoreInteractions(mockMarketRepository);
     }
 
     @Test
-    void deleteMarket_whenGivenWrongId_thenThrow() {
+    void deleteMarket_whenGivenCorrectId_thenDeleteMarket() {
         // Given
         String id = "1";
+
         // When
-        when(mockMarketRepository.existsById(id)).thenReturn(false);
+        when(mockMarketRepository.existsById(id)).thenReturn(true);
+        ResponseEntity<String> response = marketService.deleteMarket(id);
+
         // Then
-        assertThrows(NoSuchElementException.class, () -> marketService.deleteMarket(id));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Market deleted", response.getBody());
         verify(mockMarketRepository).existsById(id);
+        verify(mockMarketRepository).deleteById(id);
         verifyNoMoreInteractions(mockMarketRepository);
     }
 }
