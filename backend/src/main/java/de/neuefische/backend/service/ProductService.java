@@ -39,7 +39,7 @@ public class ProductService {
     public Product updateProduct(String productId, ProductDto updatedProductDto) {
         Product productToUpdate = productRepository.findById(productId).orElseThrow(() -> new NoSuchElementException(String.format(NO_PRODUCT_FOUND, productId)));
         Product updatedProduct = Product.builder()
-                .productId(productId)
+                .id(productId)
                 .name(updatedProductDto.name())
                 .producer(updatedProductDto.producer())
                 .pricePerBox(updatedProductDto.pricePerBox())
