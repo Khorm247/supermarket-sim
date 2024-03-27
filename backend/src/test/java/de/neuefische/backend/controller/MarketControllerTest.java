@@ -75,7 +75,7 @@ class MarketControllerTest {
         String newMarketName = "newMarketName";
 
         // When
-        mvc.perform(MockMvcRequestBuilders.put("/api/markets/" + market.getMarketId())
+        mvc.perform(MockMvcRequestBuilders.put("/api/markets/" + market.getId())
                 .contentType("application/json")
                 .content(newMarketName))
                 .andExpect(status().isOk());
@@ -111,7 +111,7 @@ class MarketControllerTest {
         Market market = objectMapper.readValue(marketJson.getResponse().getContentAsString(), Market.class);
 
         // When
-        mvc.perform(MockMvcRequestBuilders.delete("/api/markets/" + market.getMarketId()))
+        mvc.perform(MockMvcRequestBuilders.delete("/api/markets/" + market.getId()))
                 .andExpect(status().isOk());
 
         // Then

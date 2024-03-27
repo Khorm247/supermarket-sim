@@ -34,9 +34,9 @@ public class MarketService {
 
     public Market renameMarket(String marketId, String newMarketName) {
         List<Market> markets = marketRepository.findAll();
-        Market marketToUpdate = markets.stream().filter(market -> Objects.equals(market.getMarketId(), marketId)).findFirst().orElseThrow();
+        Market marketToUpdate = markets.stream().filter(market -> Objects.equals(market.getId(), marketId)).findFirst().orElseThrow();
         Market updatedMarket = Market.builder()
-                .marketId(marketId)
+                .id(marketId)
                 .name(newMarketName)
                 .balance(marketToUpdate.getBalance())
                 .currentShelfSpace(marketToUpdate.getCurrentShelfSpace())

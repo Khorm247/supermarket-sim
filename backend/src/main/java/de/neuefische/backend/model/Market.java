@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class Market {
     @Id
-    private String marketId;
+    private String id;
     private String name;
     private BigDecimal balance;
     private int maximumStorage;
