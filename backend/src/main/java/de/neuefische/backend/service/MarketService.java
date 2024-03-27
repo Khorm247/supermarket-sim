@@ -3,6 +3,8 @@ package de.neuefische.backend.service;
 import de.neuefische.backend.model.Market;
 import de.neuefische.backend.repository.MarketRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -49,12 +51,12 @@ public class MarketService {
         return updatedMarket;
     }
 
-    public String deleteMarket(String marketId) {
+    public ResponseEntity<String> deleteMarket(String marketId) {
         if (!marketRepository.existsById(marketId)) {
-            return "Market not found";
+            return new ResponseEntity<>("Market not found", HttpStatus.NOT_FOUND);
         }
 
         marketRepository.deleteById(marketId);
-        return "Market deleted";
+        return new ResponseEntity<>("Market deleted", HttpStatus.OK);
     }
 }

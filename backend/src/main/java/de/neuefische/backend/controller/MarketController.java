@@ -4,6 +4,7 @@ import de.neuefische.backend.model.Market;
 import de.neuefische.backend.service.MarketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class MarketController {
     }
 
     @DeleteMapping("/{marketId}")
-    public String deleteMarket(@PathVariable String marketId) {
+    public ResponseEntity<String> deleteMarket(@PathVariable String marketId) {
         return marketService.deleteMarket(marketId);
     }
 }

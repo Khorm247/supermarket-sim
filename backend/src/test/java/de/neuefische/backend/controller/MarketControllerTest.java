@@ -90,13 +90,14 @@ class MarketControllerTest {
     }
 
     @Test
-    void deleteMarket_whenGivenWrongId_thenThrowError() throws Exception {
+    void deleteMarket_whenGivenWrongId_thenReturnNotFoundMessage() throws Exception {
         // Given
         String id = "nonExistentId";
 
         // When & Then
         mvc.perform(MockMvcRequestBuilders.delete("/api/markets/" + id))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(MockMvcResultMatchers.content().string("Market not found"));
     }
 
     @Test
@@ -112,7 +113,8 @@ class MarketControllerTest {
 
         // When
         mvc.perform(MockMvcRequestBuilders.delete("/api/markets/" + market.getId()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Market deleted"));
 
         // Then
         mvc.perform(get("/api/markets"))
