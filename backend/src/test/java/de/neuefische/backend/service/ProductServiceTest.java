@@ -1,9 +1,7 @@
 package de.neuefische.backend.service;
 
-import de.neuefische.backend.model.Market;
 import de.neuefische.backend.model.Product;
 import de.neuefische.backend.model.ProductDto;
-import de.neuefische.backend.repository.MarketRepository;
 import de.neuefische.backend.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,6 +47,32 @@ class ProductServiceTest {
         // Then
         assertEquals(expected, actual);
         verify(mockProductRepository).findAll();
+        verifyNoMoreInteractions(mockProductRepository);
+    }
+
+    @Test
+    void getProductById_whenGivenExistingId_thenReturnProduct() {
+        // Given
+        String id = "1";
+        Product expected = new Product(id, "Product1", "Producer1", new BigDecimal(100), new BigDecimal(100), new BigDecimal("10.50"), 10);
+        // When
+        when(mockProductRepository.findById(id)).thenReturn(Optional.of(expected));
+        Product actual = productService.getProductById(id);
+        // Then
+        assertEquals(expected, actual);
+        verify(mockProductRepository).findById(id);
+        verifyNoMoreInteractions(mockProductRepository);
+    }
+
+    @Test
+    void getProductById_whenGivenWrongId_thenThrowNoSuchElementException() {
+        // Given
+        String id = "nonExistentId";
+        // When
+        when(mockProductRepository.findById(id)).thenReturn(Optional.empty());
+        // Then
+        assertThrows(NoSuchElementException.class, () -> productService.getProductById(id));
+        verify(mockProductRepository).findById(id);
         verifyNoMoreInteractions(mockProductRepository);
     }
 
