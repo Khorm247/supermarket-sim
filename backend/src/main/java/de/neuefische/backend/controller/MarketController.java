@@ -4,11 +4,9 @@ import de.neuefische.backend.model.Market;
 import de.neuefische.backend.service.MarketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/markets")
@@ -33,12 +31,7 @@ public class MarketController {
     }
 
     @DeleteMapping("/{marketId}")
-    public ResponseEntity<Void> deleteMarket(@PathVariable String marketId){
-        try {
-            marketService.deleteMarket(marketId);
-            return ResponseEntity.ok().build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public String deleteMarket(@PathVariable String marketId) {
+        return marketService.deleteMarket(marketId);
     }
 }
