@@ -76,6 +76,23 @@ class ProductControllerTest {
     }
 
     @Test
+    void getProductById_whenGivenCorrectId_thenReturnProduct() throws Exception {
+        // Given
+        Product product = new Product("1", "Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
+
+        productRepository.save(product);
+
+        // When
+        MvcResult resultJson = mvc.perform(get("/api/products/" + product.getId()))
+                .andExpect(status().isOk())
+                .andReturn();
+        Product result = objectMapper.readValue(resultJson.getResponse().getContentAsString(), Product.class);
+
+        // Then
+        assertEquals(product, result);
+    }
+
+    @Test
     void createProduct_whenGivenProductDto_thenReturnCreatedProduct() throws Exception {
         // Given
         ProductDto productDto = new ProductDto("Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), 12);
