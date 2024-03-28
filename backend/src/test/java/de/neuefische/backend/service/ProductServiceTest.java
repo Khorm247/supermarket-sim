@@ -4,11 +4,10 @@ import de.neuefische.backend.model.Product;
 import de.neuefische.backend.model.ProductDto;
 import de.neuefische.backend.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,19 +50,17 @@ class ProductServiceTest {
 
     @Test
     void getProductById_whenGivenWrongId_thenReturnNotFound() {
-        // Given
-        String id = "nonExistentId";
+    // Given
+    String id = "nonExistentId";
 
-        // When
-        when(mockProductRepository.findById(id)).thenReturn(Optional.empty());
-        ResponseEntity<Product> response = productService.getProductById(id);
+    // When
+    when(mockProductRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Then
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
-        verify(mockProductRepository).findById(id);
-        verifyNoMoreInteractions(mockProductRepository);
-    }
+    // Then
+    assertThrows(NoSuchElementException.class, () -> productService.getProductById(id));
+    verify(mockProductRepository).findById(id);
+    verifyNoMoreInteractions(mockProductRepository);
+}
 
     @Test
     void addNewMarket_whenGivenProductDto_ThenReturnNewProduct() {
@@ -98,20 +95,17 @@ class ProductServiceTest {
         verify(mockProductRepository).save(expectedProduct);
         verifyNoMoreInteractions(mockProductRepository);
     }
-
     @Test
     void deleteProduct_whenGivenWrongId_thenReturnNotFoundMessage() {
         // Given
         String id = "nonExistentId";
 
         // When
-        when(mockProductRepository.existsById(id)).thenReturn(false);
-        ResponseEntity<String> response = productService.deleteProduct(id);
+        when(mockProductRepository.findById(id)).thenReturn(Optional.empty());
 
         // Then
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Product not found", response.getBody());
-        verify(mockProductRepository).existsById(id);
+        assertThrows(NoSuchElementException.class, () -> productService.deleteProduct(id));
+        verify(mockProductRepository).findById(id);
         verifyNoMoreInteractions(mockProductRepository);
     }
 
@@ -119,16 +113,16 @@ class ProductServiceTest {
     void deleteProduct_whenGivenCorrectId_thenDeleteProduct() {
         // Given
         String id = "1";
+        Product product = new Product(id, "Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
 
         // When
-        when(mockProductRepository.existsById(id)).thenReturn(true);
-        ResponseEntity<String> response = productService.deleteProduct(id);
+        when(mockProductRepository.findById(id)).thenReturn(Optional.of(product));
+        String response = productService.deleteProduct(id);
 
         // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Product deleted", response.getBody());
-        verify(mockProductRepository).existsById(id);
-        verify(mockProductRepository).deleteById(id);
+        assertEquals("Product deleted", response);
+        verify(mockProductRepository).findById(id);
+        verify(mockProductRepository).delete(product);
         verifyNoMoreInteractions(mockProductRepository);
     }
 }

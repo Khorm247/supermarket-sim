@@ -5,10 +5,10 @@ import de.neuefische.backend.model.ProductDto;
 import de.neuefische.backend.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable String productId){
+    public Product getProductById(@PathVariable String productId){
         return productService.getProductById(productId);
     }
 
@@ -38,7 +38,13 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<String> deleteMarket(@PathVariable String productId){
+    public String deleteMarket(@PathVariable String productId){
         return productService.deleteProduct(productId);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleNoSuchElementException(NoSuchElementException e){
+        return e.getMessage();
     }
 }
