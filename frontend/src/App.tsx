@@ -5,6 +5,7 @@ import ProductList from "./pages/products/ProductList.tsx";
 import MarketList from "./pages/market/MarketList.tsx";
 import NewProduct from "./pages/products/NewProduct.tsx";
 import useProduct from "./hooks/useProduct.ts";
+import EditProduct from "./pages/products/EditProduct.tsx";
 
 export default function App() {
 
@@ -18,7 +19,7 @@ export default function App() {
                 <Route path="/api/products" element={<ProductList products={products}/>}/>
                 <Route path="/api/products/new" element={<NewProduct saveProduct={saveProduct}/>}/>
                 <Route path="/api/products/:id" element={<h1>Home</h1>}/>
-                <Route path="/api/products/:id/edit" element={<h1>Home</h1>}/>
+                <Route path="/api/products/:id/edit" element={<EditProduct updateProduct={updateProduct}/>}/>
                 <Route path="/api/products/:id/delete" element={<h1>Home</h1>}/>
                 <Route path="/api/markets/:id" element={<h1>Home</h1>}/>
             </Routes>
