@@ -1,16 +1,10 @@
-import ProductService from "../../services/ProductService.tsx";
 import {Product} from "../../types/Product.ts";
-import {useEffect, useState} from "react";
 
-const productService = new ProductService();
-export default function ProductList() {
-    const [products, setProducts] = useState<Product[]>([]);
+type ProductListProps = {
+    products: Product[],
+}
 
-    useEffect(() => {
-        productService.getAllProducts().then((response) => {
-            setProducts(response.data);
-        });
-    }, []);
+export default function ProductList(props: Readonly<ProductListProps>) {
 
     return (
         <div>
@@ -27,7 +21,7 @@ export default function ProductList() {
                 </tr>
                 </thead>
                 <tbody>
-                {products.map((product) => (
+                {props.products.map((product) => (
                     <tr key={product.id}>
                         <td>{product.name}</td>
                         <td>{product.producer}</td>
