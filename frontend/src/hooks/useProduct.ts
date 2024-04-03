@@ -40,7 +40,7 @@ export default function useCats() {
         yourPrice: number,
         itemsPerBox: number,
     ) {
-        axios.put(`/api/cats/${id}`, {
+        axios.put(`/api/products/${id}`, {
             "id": id,
             "name": name,
             "producer": producer,
