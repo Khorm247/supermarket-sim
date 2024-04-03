@@ -28,7 +28,10 @@ export default function NavBar() {
                             <NavDropdown.Item as={Link} to="#action/4.4"><del>Filialleiter</del></NavDropdown.Item>
                         </NavDropdown>
                         <Link className="nav-link" to={"/api/markets"}>Märkte</Link>
-                        <Link className="nav-link" to={"/api/products"}>Produkte</Link>
+                        <NavDropdown title={"Produkte"} id={"basic-nav-dropdown"}>
+                            <NavDropdown.Item as={Link} to={"/api/products"}>Produktliste</NavDropdown.Item>
+                            <NavDropdown.Item as={Link} to={"/api/products/new"}>Neues Produkt</NavDropdown.Item>
+                        </NavDropdown>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
