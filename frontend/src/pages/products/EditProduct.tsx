@@ -5,16 +5,7 @@ import {Category} from "../../types/Category.ts";
 
 type UpdateProductProps = {
     product: Product,
-    updateProduct: (
-        id: string,
-        name: string,
-        producer: string,
-        category: Category,
-        pricePerBox: number,
-        fairMarketValue: number,
-        yourPrice: number,
-        itemsPerBox: number,
-    ) => void
+    updateProduct: (product: Product) => void
 }
 
 export default function EditProduct(props: Readonly<UpdateProductProps>) {
@@ -39,7 +30,17 @@ export default function EditProduct(props: Readonly<UpdateProductProps>) {
             console.error("One or more fields are undefined");
             return;
         }
-        props.updateProduct(props.product.id, name, producer, category, pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
+        const product: Product = {
+            id: props.product.id,
+            name: name,
+            producer: producer,
+            category: category,
+            pricePerBox: pricePerBox,
+            fairMarketValue: fairMarketValue,
+            yourPrice: yourPrice,
+            itemsPerBox: itemsPerBox,
+        }
+        props.updateProduct(product);
         navigate("/api/products");
     }
 

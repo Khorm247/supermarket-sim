@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {Product} from "../types/Product.ts";
 import axios from "axios";
-import {Category} from "../types/Category.ts";
 
 export default function useCats() {
     const [products, setProduct] = useState<Product[]>([]);
@@ -13,46 +12,33 @@ export default function useCats() {
     }
 
     function saveProduct(
-        name: string,
-        producer: string,
-        category: Category,
-        pricePerBox: number,
-        fairMarketValue: number,
-        yourPrice: number,
-        itemsPerBox: number,
+        product: Product
     ) {
         axios.post('/api/products', {
-            "name": name,
-            "producer": producer,
-            "category": category,
-            "pricePerBox": pricePerBox,
-            "fairMarketValue": fairMarketValue,
-            "yourPrice": yourPrice,
-            "itemsPerBox": itemsPerBox,
+            "name": product.name,
+            "producer": product.producer,
+            "category": product.category,
+            "pricePerBox": product.pricePerBox,
+            "fairMarketValue": product.fairMarketValue,
+            "yourPrice": product.yourPrice,
+            "itemsPerBox": product.itemsPerBox,
         })
             .then(() => fetchProducts())
             .catch((error) => console.log(error));
     }
 
     function updateProduct(
-        id: string,
-        name: string,
-        producer: string,
-        category: Category,
-        pricePerBox: number,
-        fairMarketValue: number,
-        yourPrice: number,
-        itemsPerBox: number,
+        product: Product
     ) {
-        axios.put(`/api/products/${id}`, {
-            "id": id,
-            "name": name,
-            "producer": producer,
-            "category": category,
-            "pricePerBox": pricePerBox,
-            "fairMarketValue": fairMarketValue,
-            "yourPrice": yourPrice,
-            "itemsPerBox": itemsPerBox,
+        axios.put(`/api/products/${product.id}`, {
+            "id": product.id,
+            "name": product.name,
+            "producer": product.producer,
+            "category": product.category,
+            "pricePerBox": product.pricePerBox,
+            "fairMarketValue": product.fairMarketValue,
+            "yourPrice": product.yourPrice,
+            "itemsPerBox": product.itemsPerBox,
         })
             .then(() => fetchProducts())
             .catch((error) => console.log(error));

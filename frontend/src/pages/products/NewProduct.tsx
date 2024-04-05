@@ -1,23 +1,17 @@
 import {useNavigate} from "react-router-dom";
 import {FormEvent, useState} from "react";
 import {Category} from "../../types/Category.ts";
+import {Product} from "../../types/Product.ts";
 
 type NewProductProps = {
-    saveProduct: (
-        name: string,
-        producer: string,
-        category: Category,
-        pricePerBox: number,
-        fairMarketValue: number,
-        yourPrice: number,
-        itemsPerBox: number,
-    ) => void
+    saveProduct: (product: Product) => void
 }
 
 export default function NewProduct(props: Readonly<NewProductProps>) {
 
     const navigate = useNavigate();
     const categories = Object.keys(Category);
+
     const [name, setName] = useState("");
     const [producer, setProducer] = useState("");
     const [category, setCategory] = useState(categories[0]);
@@ -28,7 +22,17 @@ export default function NewProduct(props: Readonly<NewProductProps>) {
 
     function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault();
-        props.saveProduct(name, producer, Category[category as keyof typeof Category], pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
+        const product: Product = {
+            id: "",
+            name: name,
+            producer: producer,
+            category: Category[category as keyof typeof Category],
+            pricePerBox: pricePerBox,
+            fairMarketValue: fairMarketValue,
+            yourPrice: yourPrice,
+            itemsPerBox: itemsPerBox,
+        }
+        props.saveProduct(product);
         setName("");
         setProducer("");
         setCategory(categories[0]);
