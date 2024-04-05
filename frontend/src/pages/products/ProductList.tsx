@@ -1,13 +1,25 @@
 import {Product} from "../../types/Product.ts";
 import {Button} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 type ProductListProps = {
     products: Product[],
+    handleProduct: (product: Product) => void
+    deleteProduct: (product: Product) => void
 }
 
 export default function ProductList(props: Readonly<ProductListProps>) {
+    const navigate = useNavigate();
 
+    function handleEditClick(product: Product){
+        props.handleProduct(product);
+        navigate(`/api/products/${product.id}/edit`);
+    }
+
+    function handleDeleteClick(product: Product){
+        props.deleteProduct(product);
+        navigate(`/api/products/${product.id}/delete`);
+    }
     return (
         <div>
             <h1>Product List</h1>
@@ -16,6 +28,7 @@ export default function ProductList(props: Readonly<ProductListProps>) {
                 <tr>
                     <th>Name</th>
                     <th>Producer</th>
+                    <th>Category</th>
                     <th>Price per Box</th>
                     <th>Fair Market Value</th>
                     <th>Your Price</th>
@@ -28,17 +41,14 @@ export default function ProductList(props: Readonly<ProductListProps>) {
                     <tr key={product.id}>
                         <td>{product.name}</td>
                         <td>{product.producer}</td>
+                        <td>{product.category}</td>
                         <td>{product.pricePerBox}</td>
                         <td>{product.fairMarketValue}</td>
                         <td>{product.yourPrice}</td>
                         <td>{product.itemsPerBox}</td>
                         <td>
-                            <Link to={`/api/products/${product.id}/edit`}>
-                                <Button size="sm" variant="outline-primary">Edit</Button>
-                            </Link>
-                            <Link to={`/api/products/${product.id}/delete`}>
-                                <Button size="sm" variant="danger">X</Button>
-                            </Link>
+                            <Button onClick={() => handleEditClick(product)} size="sm" variant="outline-primary">Edit</Button>
+                            <Button onClick={() => handleDeleteClick(product)} size="sm" variant="danger">X</Button>
                         </td>
                     </tr>
                 ))}

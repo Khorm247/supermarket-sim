@@ -1,71 +1,52 @@
-import {useNavigate, useParams} from "react-router-dom";
-import {FormEvent, useEffect, useState} from "react";
-import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {FormEvent, useState} from "react";
 import {Product} from "../../types/Product.ts";
+import {Category} from "../../types/Category.ts";
 
 type UpdateProductProps = {
-    updateProduct: (
-        id: string,
-        name: string,
-        producer: string,
-        pricePerBox: number,
-        fairMarketValue: number,
-        yourPrice: number,
-        itemsPerBox: number,
-    ) => void
+    product: Product,
+    updateProduct: (product: Product) => void
 }
 
-export default function NewProduct(props: Readonly<UpdateProductProps>) {
+export default function EditProduct(props: Readonly<UpdateProductProps>) {
 
     const navigate = useNavigate();
-    const params = useParams();
-    const id = params.id;
 
-    const [product, setProduct] = useState<Product | null | undefined>(undefined);
-    const [name, setName] = useState(product?.name);
-    const [producer, setProducer] = useState(product?.producer);
-    const [pricePerBox, setPricePerBox] = useState(product?.pricePerBox);
-    const [fairMarketValue, setFairMarketValue] = useState(product?.fairMarketValue);
-    const [yourPrice, setYourPrice] = useState(product?.yourPrice);
-    const [itemsPerBox, setItemsPerBox] = useState(product?.itemsPerBox);
+    const categories = Object.keys(Category);
 
-    if (!id) {
-        navigate("/");
-        console.log("Id undefined!");
-    }
+    const [name, setName] = useState(props.product.name);
+    const [producer, setProducer] = useState(props.product.producer);
+    const [category, setCategory] = useState(props.product.category);
+    const [pricePerBox, setPricePerBox] = useState(props.product.pricePerBox);
+    const [fairMarketValue, setFairMarketValue] = useState(props.product.fairMarketValue);
+    const [yourPrice, setYourPrice] = useState(props.product.yourPrice);
+    const [itemsPerBox, setItemsPerBox] = useState(props.product.itemsPerBox);
 
-    function fetchProduct() {
-        axios.get(`/api/products/${id}`)
-            .then((response) => {
-                setName(response.data.name);
-                setProducer(response.data.producer);
-                setPricePerBox(response.data.pricePerBox);
-                setFairMarketValue(response.data.fairMarketValue);
-                setYourPrice(response.data.yourPrice);
-                setItemsPerBox(response.data.itemsPerBox);
-            })
-            .catch(() => {
-                setProduct(null);
-            });
-    }
 
-    useEffect(() => {
-        fetchProduct();
-    }, []);
 
     function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault();
-        if (!id || !name || !producer || !pricePerBox || !fairMarketValue || !yourPrice || !itemsPerBox) {
+        if (!name || !producer || !category || !pricePerBox || !fairMarketValue || !yourPrice || !itemsPerBox) {
             console.error("One or more fields are undefined");
             return;
         }
-        props.updateProduct(id, name, producer, pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
+        const product: Product = {
+            id: props.product.id,
+            name: name,
+            producer: producer,
+            category: category,
+            pricePerBox: pricePerBox,
+            fairMarketValue: fairMarketValue,
+            yourPrice: yourPrice,
+            itemsPerBox: itemsPerBox,
+        }
+        props.updateProduct(product);
         navigate("/api/products");
     }
 
     return (
         <div>
-            <h1>New Product</h1>
+            <h1>Edit Product</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="name" className="form-label">Name</label>
@@ -78,6 +59,18 @@ export default function NewProduct(props: Readonly<UpdateProductProps>) {
                     <input type="text" className="form-control" id="producer"
                            value={producer}
                            onChange={(e) => setProducer(e.target.value)}/>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="category" className="form-label">Kategorie</label>
+                    <select className="form-control" id="category"
+                           value={category}
+                           onChange={(e) => setCategory(e.target.value as Category)}>
+                        {
+                            categories.map((category) => (
+                                <option key={category} value={category}>{category}</option>
+                            ))
+                        }
+                    </select>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="pricePerBox" className="form-label">Price Per Box</label>
