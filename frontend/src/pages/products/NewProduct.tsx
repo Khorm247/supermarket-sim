@@ -6,7 +6,7 @@ type NewProductProps = {
     saveProduct: (
         name: string,
         producer: string,
-        category: string,
+        category: Category,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
@@ -28,7 +28,7 @@ export default function NewProduct(props: Readonly<NewProductProps>) {
 
     function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault();
-        props.saveProduct(name, producer, category, pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
+        props.saveProduct(name, producer, Category[category as keyof typeof Category], pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
         setName("");
         setProducer("");
         setCategory(categories[0]);
