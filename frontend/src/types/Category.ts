@@ -1,5 +1,5 @@
 export enum Category {
     STARTING_MATERIALS = "Starting Materials",
     FRUITS = "Fruits",
-    VEGETABLES = "Vegetables",
+    CLEANING_SUPPLIES = "Cleaning Supplies",
 }
