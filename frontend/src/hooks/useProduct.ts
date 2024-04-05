@@ -14,6 +14,7 @@ export default function useCats() {
     function saveProduct(
         name: string,
         producer: string,
+        category: string,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
@@ -22,6 +23,7 @@ export default function useCats() {
         axios.post('/api/products', {
             "name": name,
             "producer": producer,
+            "category": category,
             "pricePerBox": pricePerBox,
             "fairMarketValue": fairMarketValue,
             "yourPrice": yourPrice,
@@ -35,6 +37,7 @@ export default function useCats() {
         id: string,
         name: string,
         producer: string,
+        category: string,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
@@ -44,6 +47,7 @@ export default function useCats() {
             "id": id,
             "name": name,
             "producer": producer,
+            "category": category,
             "pricePerBox": pricePerBox,
             "fairMarketValue": fairMarketValue,
             "yourPrice": yourPrice,

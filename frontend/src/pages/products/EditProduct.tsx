@@ -2,12 +2,14 @@ import {useNavigate, useParams} from "react-router-dom";
 import {FormEvent, useEffect, useState} from "react";
 import axios from "axios";
 import {Product} from "../../types/Product.ts";
+import {Category} from "../../types/Category.ts";
 
 type UpdateProductProps = {
     updateProduct: (
         id: string,
         name: string,
         producer: string,
+        category: string,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
@@ -21,9 +23,12 @@ export default function NewProduct(props: Readonly<UpdateProductProps>) {
     const params = useParams();
     const id = params.id;
 
+    const categories = Object.values(Category);
+
     const [product, setProduct] = useState<Product | null | undefined>(undefined);
     const [name, setName] = useState(product?.name);
     const [producer, setProducer] = useState(product?.producer);
+    const [category, setCategory] = useState(product?.category);
     const [pricePerBox, setPricePerBox] = useState(product?.pricePerBox);
     const [fairMarketValue, setFairMarketValue] = useState(product?.fairMarketValue);
     const [yourPrice, setYourPrice] = useState(product?.yourPrice);
@@ -39,6 +44,12 @@ export default function NewProduct(props: Readonly<UpdateProductProps>) {
             .then((response) => {
                 setName(response.data.name);
                 setProducer(response.data.producer);
+                if(response.data.category === "" || response.data.category === null){
+                    setCategory(categories[0]);
+                }
+                else{
+                    setCategory(response.data.category);
+                }
                 setPricePerBox(response.data.pricePerBox);
                 setFairMarketValue(response.data.fairMarketValue);
                 setYourPrice(response.data.yourPrice);
@@ -53,13 +64,22 @@ export default function NewProduct(props: Readonly<UpdateProductProps>) {
         fetchProduct();
     }, []);
 
+    useEffect(() => {
+        if(product?.category === "" || product?.category === null){
+            setCategory(categories[0]);
+        }
+        else{
+            setCategory(product?.category);
+        }
+    }, [categories]);
+
     function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault();
-        if (!id || !name || !producer || !pricePerBox || !fairMarketValue || !yourPrice || !itemsPerBox) {
+        if (!id || !name || !producer || !category || !pricePerBox || !fairMarketValue || !yourPrice || !itemsPerBox) {
             console.error("One or more fields are undefined");
             return;
         }
-        props.updateProduct(id, name, producer, pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
+        props.updateProduct(id, name, producer, category, pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
         navigate("/api/products");
     }
 
@@ -78,6 +98,18 @@ export default function NewProduct(props: Readonly<UpdateProductProps>) {
                     <input type="text" className="form-control" id="producer"
                            value={producer}
                            onChange={(e) => setProducer(e.target.value)}/>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="category" className="form-label">Kategorie</label>
+                    <select className="form-control" id="category"
+                           defaultValue={categories[0]}
+                           onChange={(e) => setCategory(e.target.value)}>
+                        {
+                            categories.map((category) => (
+                                <option key={category} value={category}>{category}</option>
+                            ))
+                        }
+                    </select>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="pricePerBox" className="form-label">Price Per Box</label>

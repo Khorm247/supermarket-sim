@@ -1,10 +1,12 @@
 import {useNavigate} from "react-router-dom";
 import {FormEvent, useState} from "react";
+import {Category} from "../../types/Category.ts";
 
 type NewProductProps = {
     saveProduct: (
         name: string,
         producer: string,
+        category: string,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
@@ -15,8 +17,10 @@ type NewProductProps = {
 export default function NewProduct(props: Readonly<NewProductProps>) {
 
     const navigate = useNavigate();
+    const categories = Object.values(Category);
     const [name, setName] = useState("");
     const [producer, setProducer] = useState("");
+    const [category, setCategory] = useState(categories[0]);
     const [pricePerBox, setPricePerBox] = useState(0);
     const [fairMarketValue, setFairMarketValue] = useState(0);
     const [yourPrice, setYourPrice] = useState(0);
@@ -24,9 +28,10 @@ export default function NewProduct(props: Readonly<NewProductProps>) {
 
     function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault();
-        props.saveProduct(name, producer, pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
+        props.saveProduct(name, producer, category, pricePerBox, fairMarketValue, yourPrice, itemsPerBox);
         setName("");
         setProducer("");
+        setCategory(categories[0]);
         setPricePerBox(0);
         setFairMarketValue(0);
         setYourPrice(0);
@@ -46,27 +51,39 @@ export default function NewProduct(props: Readonly<NewProductProps>) {
                 <div className="mb-3">
                     <label htmlFor="producer" className="form-label">Producer</label>
                     <input type="text" className="form-control" id="producer"
-                        onChange={(e) => setProducer(e.target.value)}/>
+                           onChange={(e) => setProducer(e.target.value)}/>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="category" className="form-label">Kategorie</label>
+                    <select className="form-control" id="category"
+                            defaultValue={categories[0]}
+                            onChange={(e) => setCategory(Category[e.target.value as keyof typeof Category])}>
+                        {
+                            categories.map((category) => (
+                                <option key={category} value={category}>{category}</option>
+                            ))
+                        }
+                    </select>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="pricePerBox" className="form-label">Price Per Box</label>
                     <input type="number" className="form-control" id="pricePerBox"
-                        onChange={(e) => setPricePerBox(Number(e.target.value))}/>
+                           onChange={(e) => setPricePerBox(Number(e.target.value))}/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="fairMarketValue" className="form-label">Fair Market Value</label>
                     <input type="number" className="form-control" id="fairMarketValue"
-                        onChange={(e) => setFairMarketValue(Number(e.target.value))}/>
+                           onChange={(e) => setFairMarketValue(Number(e.target.value))}/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="yourPrice" className="form-label">Your Price</label>
                     <input type="number" className="form-control" id="yourPrice"
-                        onChange={(e) => setYourPrice(Number(e.target.value))}/>
+                           onChange={(e) => setYourPrice(Number(e.target.value))}/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="itemsPerBox" className="form-label">Items Per Box</label>
                     <input type="number" className="form-control" id="itemsPerBox"
-                        onChange={(e) => setItemsPerBox(Number(e.target.value))}/>
+                           onChange={(e) => setItemsPerBox(Number(e.target.value))}/>
                 </div>
                 <button type="submit" className="btn btn-primary">Produkt anlegen</button>
             </form>

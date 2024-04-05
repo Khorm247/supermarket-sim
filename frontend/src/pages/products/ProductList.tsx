@@ -16,6 +16,7 @@ export default function ProductList(props: Readonly<ProductListProps>) {
                 <tr>
                     <th>Name</th>
                     <th>Producer</th>
+                    <th>Category</th>
                     <th>Price per Box</th>
                     <th>Fair Market Value</th>
                     <th>Your Price</th>
@@ -28,6 +29,7 @@ export default function ProductList(props: Readonly<ProductListProps>) {
                     <tr key={product.id}>
                         <td>{product.name}</td>
                         <td>{product.producer}</td>
+                        <td>{product.category}</td>
                         <td>{product.pricePerBox}</td>
                         <td>{product.fairMarketValue}</td>
                         <td>{product.yourPrice}</td>
