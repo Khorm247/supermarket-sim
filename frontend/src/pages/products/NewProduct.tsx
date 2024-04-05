@@ -6,7 +6,7 @@ type NewProductProps = {
     saveProduct: (
         name: string,
         producer: string,
-        category: Category,
+        category: string,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
@@ -17,7 +17,7 @@ type NewProductProps = {
 export default function NewProduct(props: Readonly<NewProductProps>) {
 
     const navigate = useNavigate();
-    const categories = Object.values(Category);
+    const categories = Object.keys(Category);
     const [name, setName] = useState("");
     const [producer, setProducer] = useState("");
     const [category, setCategory] = useState(categories[0]);
@@ -55,15 +55,15 @@ export default function NewProduct(props: Readonly<NewProductProps>) {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="category" className="form-label">Kategorie</label>
-                    <select className="form-control" id="category"
-                            defaultValue={categories[0]}
-                            onChange={(e) => setCategory(Category[e.target.value as keyof typeof Category])}>
-                        {
-                            categories.map((category) => (
-                                <option key={category} value={category}>{category}</option>
-                            ))
-                        }
-                    </select>
+                <select className="form-control" id="category"
+                        defaultValue={Category[categories[0] as keyof typeof Category]}
+                        onChange={(e) => setCategory(Category[categories[e.target.selectedIndex] as keyof typeof Category])}>
+                    {
+                        categories.map((category) => (
+                            <option key={category} value={Category[category as keyof typeof Category]}>{category}</option>
+                        ))
+                    }
+                </select>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="pricePerBox" className="form-label">Price Per Box</label>
