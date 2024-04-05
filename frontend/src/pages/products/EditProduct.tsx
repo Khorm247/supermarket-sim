@@ -21,7 +21,7 @@ export default function EditProduct(props: Readonly<UpdateProductProps>) {
 
     const navigate = useNavigate();
 
-    const categories = Object.values(Category);
+    const categories = Object.keys(Category);
 
     const [name, setName] = useState(props.product.name);
     const [producer, setProducer] = useState(props.product.producer);
@@ -62,8 +62,8 @@ export default function EditProduct(props: Readonly<UpdateProductProps>) {
                 <div className="mb-3">
                     <label htmlFor="category" className="form-label">Kategorie</label>
                     <select className="form-control" id="category"
-                           defaultValue={categories[0]}
-                           onChange={(e) => setCategory(Category[e.target.value as keyof typeof Category])}>
+                           value={category}
+                           onChange={(e) => setCategory(e.target.value as Category)}>
                         {
                             categories.map((category) => (
                                 <option key={category} value={category}>{category}</option>

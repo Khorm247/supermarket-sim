@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {Product} from "../types/Product.ts";
 import axios from "axios";
+import {Category} from "../types/Category.ts";
 
 export default function useCats() {
     const [products, setProduct] = useState<Product[]>([]);
@@ -14,7 +15,7 @@ export default function useCats() {
     function saveProduct(
         name: string,
         producer: string,
-        category: string,
+        category: Category,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
@@ -37,7 +38,7 @@ export default function useCats() {
         id: string,
         name: string,
         producer: string,
-        category: string,
+        category: Category,
         pricePerBox: number,
         fairMarketValue: number,
         yourPrice: number,
