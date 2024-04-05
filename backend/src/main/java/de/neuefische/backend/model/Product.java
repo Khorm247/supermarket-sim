@@ -17,6 +17,7 @@ public class Product {
     private String id;
     private String name;
     private String producer;
+    private ProductCategory productCategory;
     private BigDecimal pricePerBox;
     private BigDecimal fairMarketValue;
     private BigDecimal yourPrice;

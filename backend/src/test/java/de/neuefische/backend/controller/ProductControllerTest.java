@@ -2,6 +2,7 @@ package de.neuefische.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.neuefische.backend.model.Product;
+import de.neuefische.backend.model.ProductCategory;
 import de.neuefische.backend.model.ProductDto;
 import de.neuefische.backend.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -46,9 +47,9 @@ class ProductControllerTest {
     @Test
     void getAllProducts_whenProductsInList_thenReturnListProducts() throws Exception {
         // Given
-        Product product1 = new Product("1", "Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
-        Product product2 = new Product("2", "Product2", "Producer2", new BigDecimal(200), new BigDecimal("4.50"), new BigDecimal("4.50"), 24);
-        Product product3 = new Product("3", "Product3", "Producer3", new BigDecimal(300), new BigDecimal("5.50"), new BigDecimal("5.50"), 36);
+        Product product1 = new Product("1", "Product1", "Producer1", ProductCategory.STARTING_MATERIALS, new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
+        Product product2 = new Product("2", "Product2", "Producer2", ProductCategory.STARTING_MATERIALS, new BigDecimal(200), new BigDecimal("4.50"), new BigDecimal("4.50"), 24);
+        Product product3 = new Product("3", "Product3", "Producer3", ProductCategory.STARTING_MATERIALS, new BigDecimal(300), new BigDecimal("5.50"), new BigDecimal("5.50"), 36);
 
         List<Product> expected = List.of(product1, product2, product3);
 
@@ -78,7 +79,7 @@ class ProductControllerTest {
     @Test
     void getProductById_whenGivenCorrectId_thenReturnProduct() throws Exception {
         // Given
-        Product product = new Product("1", "Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
+        Product product = new Product("1", "Product1", "Producer1", ProductCategory.STARTING_MATERIALS, new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
 
         productRepository.save(product);
 
@@ -95,7 +96,7 @@ class ProductControllerTest {
     @Test
     void createProduct_whenGivenProductDto_thenReturnCreatedProduct() throws Exception {
         // Given
-        ProductDto productDto = new ProductDto("Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), 12);
+        ProductDto productDto = new ProductDto("Product1", "Producer1", ProductCategory.STARTING_MATERIALS, new BigDecimal(100), new BigDecimal("3.50"), 12);
 
 
         MvcResult productJson = mvc.perform(post("/api/products")
@@ -117,8 +118,8 @@ class ProductControllerTest {
     @Test
     void updateProduct_whenGivenExistingId_ThenReturnUpdatedProduct() throws Exception {
         // Given
-        ProductDto productDto = new ProductDto("ProductNew", "ProducerNew", new BigDecimal(100), new BigDecimal("3.50"), 12);
-        Product existing = new Product("1", "Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
+        ProductDto productDto = new ProductDto("ProductNew", "ProducerNew", ProductCategory.STARTING_MATERIALS, new BigDecimal(100), new BigDecimal("3.50"), 12);
+        Product existing = new Product("1", "Product1", "Producer1", ProductCategory.STARTING_MATERIALS, new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
 
         productRepository.save(existing);
 
@@ -153,7 +154,7 @@ class ProductControllerTest {
     @Test
     void deleteProduct_whenGivenCorrectId_thenDeleteProduct() throws Exception {
         // Given
-        Product existing = new Product("1", "Product1", "Producer1", new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
+        Product existing = new Product("1", "Product1", "Producer1", ProductCategory.STARTING_MATERIALS, new BigDecimal(100), new BigDecimal("3.50"), new BigDecimal("3.50"), 12);
 
         productRepository.save(existing);
 
