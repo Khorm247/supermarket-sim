@@ -1,10 +1,11 @@
 package de.neuefische.backend.service;
 
-import de.neuefische.backend.model.Inventory;
+import de.neuefische.backend.model.*;
 import de.neuefische.backend.repository.InventoryRepository;
 import de.neuefische.backend.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -57,6 +58,81 @@ class InventoryServiceTest {
         // Then
         assertEquals(expected, actual);
         verify(mockInventoryRepository).findAll();
+        verifyNoMoreInteractions(mockInventoryRepository);
+    }
+
+    @Test
+    void getInventoryById_whenGivenWrongId_thenReturnNotFound() {
+        // Given
+        String id = "nonExistentId";
+
+        // When
+        when(mockInventoryRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Then
+        assertThrows(NoSuchElementException.class, () -> inventoryService.getInventoryById(id));
+        verify(mockInventoryRepository).findById(id);
+        verifyNoMoreInteractions(mockInventoryRepository);
+    }
+
+    @Test
+    void getInventoryById_whenGivenCorrectId_thenReturnInventory() {
+        // Given
+        String id = "1";
+        Inventory expected = Inventory.builder()
+                .id(id)
+                .playerId("player1")
+                .build();
+
+        // When
+        when(mockInventoryRepository.findById(id)).thenReturn(Optional.of(expected));
+        Inventory actual = inventoryService.getInventoryById(id);
+
+        // Then
+        assertEquals(expected, actual);
+        verify(mockInventoryRepository).findById(id);
+        verifyNoMoreInteractions(mockInventoryRepository);
+    }
+
+    @Test
+    void createNewInventory_whenGivenPlayerId_returnNewInventory() {
+        // Given
+        String playerId = "player1";
+        List<Product> products = List.of(
+                Product.builder()
+                        .id("1")
+                        .name("fakeProduct")
+                        .producer("fakeProducer")
+                        .category(ProductCategory.STARTING_MATERIALS)
+                        .pricePerBox(new BigDecimal(100))
+                        .fairMarketValue(new BigDecimal(100))
+                        .yourPrice(new BigDecimal("10.50"))
+                        .build()
+        );
+        List<Inventory> expected = List.of(
+                Inventory.builder()
+                        .playerId(playerId)
+                        .inventoryItems(products.stream()
+                                .map(product -> InventoryItem.builder()
+                                        .productId(product.getId())
+                                        .product(product)
+                                        .quantityInShelf(0)
+                                        .quantityInStorage(0)
+                                        .build())
+                                .toList())
+                        .build()
+        );
+
+        // When
+        when(mockProductRepository.findAll()).thenReturn(products);
+        when(mockInventoryRepository.save(any())).thenReturn(expected.getFirst());
+
+        Inventory actual = inventoryService.createNewInventory(playerId);
+        // Then
+        assertEquals(expected.getFirst(), actual);
+        verify(mockProductRepository).findAll();
+        verify(mockInventoryRepository).save(any());
+        verifyNoMoreInteractions(mockProductRepository);
         verifyNoMoreInteractions(mockInventoryRepository);
     }
 
