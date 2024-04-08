@@ -1,13 +1,10 @@
 package de.neuefische.backend.service;
 
 import de.neuefische.backend.model.Inventory;
-import de.neuefische.backend.model.Product;
-import de.neuefische.backend.model.ProductCategory;
 import de.neuefische.backend.repository.InventoryRepository;
 import de.neuefische.backend.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
