@@ -79,23 +79,6 @@ public class InventoryService {
         return updateInventory(inventory);
     }
 
-    public Inventory updateInventoryItem(String inventoryId, InventoryItem updatedInventoryItem) {
-
-        // Todo: Implement the method updateInventoryItem in InventoryService
-        Inventory inventory = getInventoryById(inventoryId);
-        List<InventoryItem> inventoryItems = inventory.getInventoryItems();
-        inventoryItems.stream()
-                .filter(inventoryItem -> inventoryItem.getProductId().equals(updatedInventoryItem.getProductId()))
-                .findFirst()
-                .ifPresent(inventoryItem -> {
-                    inventoryItems.remove(inventoryItem);
-                    inventoryItems.add(updatedInventoryItem);
-                });
-        inventory.setInventoryItems(inventoryItems);
-        inventoryRepository.save(inventory);
-        return inventory;
-    }
-
     public String deleteInventory(String inventoryId) {
         Inventory inventory = getInventoryById(inventoryId);
         inventoryRepository.delete(inventory);
