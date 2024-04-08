@@ -4,15 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
 
-@RequiredArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Data
 @Builder
-public class Inventory {
-    @Id
+public class InventoryItem {
     private String id;
-    private String playerId;
-    private InventoryItem[] inventoryItems;
+    private String productId;
+    private int quantityInShelf;
+    private int quantityInStorage;
 }
