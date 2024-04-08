@@ -26,6 +26,13 @@ public class InventoryService {
         return inventoryRepository.findById(inventoryId).orElseThrow(() -> new NoSuchElementException(String.format("Inventory with id %s does not exist", inventoryId)));
     }
 
+    public Inventory getInventoryByPlayerId(String playerId) {
+        return inventoryRepository.findAll().stream()
+                .filter(inventory -> inventory.getPlayerId().equals(playerId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException(String.format("Inventory with player id %s does not exist", playerId)));
+    }
+
     public Inventory createNewInventory(String playerId) {
         List<Product> products = productService.getAllProducts().stream()
                 .filter(product -> product.getCategory().equals(ProductCategory.STARTING_MATERIALS))
