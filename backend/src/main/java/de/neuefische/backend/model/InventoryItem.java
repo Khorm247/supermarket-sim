@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 @Data
 @Builder
 public class InventoryItem {
-    private String id;
     private String productId;
+    private Product product;
     private int quantityInShelf;
     private int quantityInStorage;
 }

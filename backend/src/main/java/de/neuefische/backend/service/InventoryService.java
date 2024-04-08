@@ -34,6 +34,7 @@ public class InventoryService {
         List<InventoryItem> inventoryItems = products.stream()
                 .map(product -> InventoryItem.builder()
                         .productId(product.getId())
+                        .product(product)
                         .quantityInShelf(0)
                         .quantityInStorage(0)
                         .build())
@@ -67,6 +68,7 @@ public class InventoryService {
             if (oldInventoryItems.stream().noneMatch(inventoryItem -> inventoryItem.getProductId().equals(product.getId()))) {
                 oldInventoryItems.add(InventoryItem.builder()
                         .productId(product.getId())
+                        .product(product)
                         .quantityInShelf(0)
                         .quantityInStorage(0)
                         .build());
