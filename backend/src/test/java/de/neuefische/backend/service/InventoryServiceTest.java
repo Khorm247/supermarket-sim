@@ -6,6 +6,7 @@ import de.neuefische.backend.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -134,6 +135,64 @@ class InventoryServiceTest {
         verify(mockInventoryRepository).save(any());
         verifyNoMoreInteractions(mockProductRepository);
         verifyNoMoreInteractions(mockInventoryRepository);
+    }
+
+    @Test
+    void addProductCategory_whenGivenInventoryIdAndCategory_thenReturnUpdatedInventory() {
+        // Given
+        String inventoryId = "1";
+        String category = "FRUITS";
+        Inventory inventory = Inventory.builder()
+                .id(inventoryId)
+                .playerId("player1")
+                .inventoryItems(new ArrayList<>())
+                .build();
+        List<Product> products = List.of(
+                Product.builder()
+                        .id("1")
+                        .name("fakeProduct")
+                        .producer("fakeProducer")
+                        .category(ProductCategory.FRUITS)
+                        .pricePerBox(new BigDecimal(100))
+                        .fairMarketValue(new BigDecimal(100))
+                        .yourPrice(new BigDecimal("10.50"))
+                        .build(),
+                Product.builder()
+                        .id("2")
+                        .name("fakeProduct2")
+                        .producer("fakeProducer2")
+                        .category(ProductCategory.FRUITS)
+                        .pricePerBox(new BigDecimal(55))
+                        .fairMarketValue(new BigDecimal(55))
+                        .yourPrice(new BigDecimal("3.50"))
+                        .build()
+        );
+        Inventory expected = Inventory.builder()
+                .id(inventoryId)
+                .playerId("player1")
+                .inventoryItems(products.stream()
+                        .map(product -> InventoryItem.builder()
+                                .productId(product.getId())
+                                .product(product)
+                                .quantityInShelf(0)
+                                .quantityInStorage(0)
+                                .build())
+                        .toList())
+                .build();
+
+        // When
+        when(mockInventoryRepository.findById(inventoryId)).thenReturn(Optional.of(inventory));
+        when(mockProductRepository.findAll()).thenReturn(products);
+        when(mockInventoryRepository.save(any())).thenReturn(expected);
+
+        Inventory actual = inventoryService.addProductCategory(inventoryId, category);
+        // Then
+        assertEquals(expected, actual);
+        verify(mockInventoryRepository).findById(inventoryId);
+        verify(mockProductRepository).findAll();
+        verify(mockInventoryRepository).save(any());
+        verifyNoMoreInteractions(mockInventoryRepository);
+        verifyNoMoreInteractions(mockProductRepository);
     }
 
     @Test
