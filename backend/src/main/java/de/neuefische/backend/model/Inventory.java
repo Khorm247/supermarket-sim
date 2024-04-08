@@ -15,5 +15,6 @@ public class Inventory {
     private String id;
     private String playerId;
     private String productId;
-    private int quantity;
+    private int quantityInShelf;
+    private int quantityInStorage;
 }
