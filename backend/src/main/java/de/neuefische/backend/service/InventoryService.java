@@ -53,8 +53,9 @@ public class InventoryService {
         return updatedInventory;
     }
 
-    public Inventory addProductCategory(String inventoryId, ProductCategory categoryToAdd) {
+    public Inventory addProductCategory(String inventoryId, String category) {
         Inventory inventory = getInventoryById(inventoryId);
+        ProductCategory categoryToAdd = ProductCategory.valueOf(category);
 
         List<Product> products = productService.getAllProducts().stream()
                 .filter(product -> product.getCategory().equals(categoryToAdd))
