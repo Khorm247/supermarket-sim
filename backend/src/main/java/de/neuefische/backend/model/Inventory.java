@@ -3,10 +3,10 @@ package de.neuefische.backend.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 
-@RequiredArgsConstructor
+import java.util.List;
+
 @AllArgsConstructor
 @Data
 @Builder
@@ -14,5 +14,5 @@ public class Inventory {
     @Id
     private String id;
     private String playerId;
-    private InventoryItem[] inventoryItems;
+    private List<InventoryItem> inventoryItems;
 }
