@@ -7,9 +7,16 @@ export default function useInventory() {
     const playerId = "111";
 
     function fetchInventory() {
-        axios.get('/api/inventory/' + playerId)
+        axios.get('/api/inventory/player/' + playerId)
             .then((response) => setInventory(response.data))
             .catch((error) => console.error(error));
+    }
+
+    function addCategory(category: string) {
+        axios.put(`/api/inventory/${inventory?.id}`, category, {headers:
+                {"Content-Type": "text/plain"}})
+            .then(() => fetchInventory())
+            .catch((error) => console.log(error));
     }
 
     function deleteInventory(id: string) {
@@ -24,6 +31,7 @@ export default function useInventory() {
 
     return {
         inventory,
+        addCategory,
         deleteInventory
     }
 }
