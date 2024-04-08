@@ -25,6 +25,11 @@ public class InventoryController {
         return inventoryService.getInventoryById(inventoryId);
     }
 
+    @GetMapping("/player/{playerId}")
+    public Inventory getInventoryByPlayerId(@PathVariable String playerId){
+        return inventoryService.getInventoryByPlayerId(playerId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Inventory createNewInventory(@RequestBody String playerId){
