@@ -4,5 +4,5 @@ export type InventoryItem = {
     productId: string,
     product: Product,
     quantityInShelf: number,
-    quantityInStock: number,
+    quantityInStorage: number,
 }
