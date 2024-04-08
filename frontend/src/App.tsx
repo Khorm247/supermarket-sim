@@ -8,30 +8,31 @@ import useProduct from "./hooks/useProduct.ts";
 import EditProduct from "./pages/products/EditProduct.tsx";
 import DeleteProduct from "./pages/products/DeleteProduct.tsx";
 import Overview from "./pages/market/Overview.tsx";
-import Inventory from "./pages/market/Inventory.tsx";
+import InventoryList from "./pages/inventory/InventoryList.tsx";
 import Upgrade from "./pages/market/Upgrade.tsx";
 import {Product} from "./types/Product.ts";
 import {useState} from "react";
+import useInventory from "./hooks/useInventory.ts";
 
 export default function App() {
 
     const {products, saveProduct, updateProduct, deleteProduct} = useProduct();
     const [product, setProduct] = useState<Product>();
+    const {inventory, addCategory} = useInventory();
 
     return (
         <>
             <Routes>
                 <Route path="/" element={<Overview/>} />
-                <Route path="/api/inventory" element={<Inventory/>}/>
+
                 <Route path="/api/markets" element={<MarketList/>}/>
+                {inventory && <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>}
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>
                 <Route path="/api/products/new" element={<NewProduct saveProduct={saveProduct}/>}/>
                 <Route path="/api/products/:id" element={<h1>Home</h1>}/>
-                {
-                    product && <Route path="/api/products/:id/edit" element={<EditProduct product={product} updateProduct={updateProduct}/>}/>
-                }
+                {product && <Route path="/api/products/:id/edit" element={<EditProduct product={product} updateProduct={updateProduct}/>}/>}
                 <Route path="/api/products/:id/delete" element={<DeleteProduct deleteProduct={deleteProduct}/>}/>
-                <Route path="/api/upgrade" element={<Upgrade/>}/>
+                {inventory && <Route path="/api/upgrade" element={<Upgrade addCategory={addCategory} inventory={inventory}/>}/>}
             </Routes>
             <NavBar />
         </>
