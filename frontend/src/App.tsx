@@ -22,19 +22,19 @@ export default function App() {
 
     return (
         <>
+            <NavBar />
             <Routes>
                 <Route path="/" element={<Overview/>} />
-
+                <Route path="/api/cart" element={<h1>Shopping Cart</h1>} />
+                <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
                 <Route path="/api/markets" element={<MarketList/>}/>
-                {inventory && <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>}
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>
                 <Route path="/api/products/new" element={<NewProduct saveProduct={saveProduct}/>}/>
                 <Route path="/api/products/:id" element={<h1>Home</h1>}/>
                 {product && <Route path="/api/products/:id/edit" element={<EditProduct product={product} updateProduct={updateProduct}/>}/>}
                 <Route path="/api/products/:id/delete" element={<DeleteProduct deleteProduct={deleteProduct}/>}/>
-                {inventory && <Route path="/api/upgrade" element={<Upgrade addCategory={addCategory} inventory={inventory}/>}/>}
+                <Route path="/api/upgrade" element={<Upgrade addCategory={addCategory} inventory={inventory}/>}/>
             </Routes>
-            <NavBar />
         </>
     )
 }

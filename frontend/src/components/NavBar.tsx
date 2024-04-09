@@ -3,6 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import {Link} from "react-router-dom";
+import {ShoppingCart} from "phosphor-react";
 
 export default function NavBar() {
     return (
@@ -34,6 +35,7 @@ export default function NavBar() {
                             <NavDropdown.Item as={Link} to={"/api/products"}>Produktliste</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={"/api/products/new"}>Neues Produkt</NavDropdown.Item>
                         </NavDropdown>
+                        <Navbar.Brand as={Link} to={"/api/cart"}><ShoppingCart size={24}/></Navbar.Brand>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
