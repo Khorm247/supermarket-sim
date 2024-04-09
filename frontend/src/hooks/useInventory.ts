@@ -3,7 +3,13 @@ import axios from "axios";
 import {Inventory} from "../types/Inventory.ts";
 
 export default function useInventory() {
-    const [inventory, setInventory] = useState<Inventory>();
+    const [inventory, setInventory] = useState<Inventory>(
+        {
+            id: "",
+            playerId: "",
+            inventoryItems: []
+        }
+    );
     const playerId = "111";
 
     function fetchInventory() {
