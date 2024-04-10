@@ -4,8 +4,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import {Link} from "react-router-dom";
 import {ShoppingCart} from "phosphor-react";
+import {Button} from "react-bootstrap";
+import {useShoppingCart} from "../context/ShoppingCartContext.tsx";
 
 export default function NavBar() {
+    const { openCart, cartQuantity } = useShoppingCart()
     return (
         <Navbar fixed={"top"} variant="light" expand="lg" className="bg-body-tertiary">
             <Container>
@@ -35,8 +38,32 @@ export default function NavBar() {
                             <NavDropdown.Item as={Link} to={"/api/products"}>Produktliste</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={"/api/products/new"}>Neues Produkt</NavDropdown.Item>
                         </NavDropdown>
-                        <Navbar.Brand as={Link} to={"/api/cart"}><ShoppingCart size={24}/></Navbar.Brand>
+
                     </Nav>
+                    {cartQuantity > 0 && (
+                        <Button
+                            onClick={openCart}
+                            style={{ width: "3rem", height: "3rem", position: "relative" }}
+                            variant="outline-primary"
+                            className="rounded-circle"
+                        >
+                            <ShoppingCart size={24}/>
+                            <div
+                                className="rounded-circle bg-danger d-flex justify-content-center align-items-center"
+                                style={{
+                                    color: "white",
+                                    width: "1.5rem",
+                                    height: "1.5rem",
+                                    position: "absolute",
+                                    bottom: 0,
+                                    right: 0,
+                                    transform: "translate(25%, 25%)",
+                                }}
+                            >
+                                {cartQuantity}
+                            </div>
+                        </Button>
+                    )}
                 </Navbar.Collapse>
             </Container>
         </Navbar>
