@@ -1,4 +1,5 @@
-import {createContext, ReactNode, useContext, useMemo, useState} from "react"
+import {createContext, ReactNode, useContext, useMemo, useState, useCallback} from "react"
+
 import { ShoppingCart } from "../components/ShoppingCart"
 import { useLocalStorage } from "../hooks/useLocalStorage"
 
@@ -40,12 +41,12 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
         0
     )
 
-    const openCart = () => setIsOpen(true)
-    const closeCart = () => setIsOpen(false)
-    function getItemQuantity(id: string) {
+    const openCart = useCallback(() => setIsOpen(true), [])
+    const closeCart = useCallback(() => setIsOpen(false), [])
+    const getItemQuantity = useCallback((id: string) => {
         return shoppingCartItems.find(item => item.id === id)?.quantity || 0
-    }
-    function increaseCartQuantity(id: string) {
+    }, [shoppingCartItems])
+    const increaseCartQuantity = useCallback((id: string) => {
         setShoppingCartItems(currItems => {
             if (currItems.find(item => item.id === id) == null) {
                 return [...currItems, { id, quantity: 1 }]
@@ -59,8 +60,8 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
                 })
             }
         })
-    }
-    function decreaseCartQuantity(id: string) {
+    }, [setShoppingCartItems])
+    const decreaseCartQuantity = useCallback((id: string) => {
         setShoppingCartItems(currItems => {
             if (currItems.find(item => item.id === id)?.quantity === 1) {
                 return currItems.filter(item => item.id !== id)
@@ -74,12 +75,12 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
                 })
             }
         })
-    }
-    function removeFromCart(id: string) {
+    }, [setShoppingCartItems])
+    const removeFromCart = useCallback((id: string) => {
         setShoppingCartItems(currItems => {
             return currItems.filter(item => item.id !== id)
         })
-    }
+    }, [setShoppingCartItems])
 
     const value = useMemo(() => ({
         getItemQuantity,
