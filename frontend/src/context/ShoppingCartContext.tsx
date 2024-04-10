@@ -28,7 +28,7 @@ export function useShoppingCart() {
     return useContext(ShoppingCartContext)
 }
 
-export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
+export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProviderProps>) {
     const [isOpen, setIsOpen] = useState(false)
     const [shoppingCartItems, setShoppingCartItems] = useLocalStorage<ShoppingCartItem[]>(
         "shopping-cart",
