@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from "react"
+import {createContext, ReactNode, useContext, useMemo, useState} from "react"
 import { ShoppingCart } from "../components/ShoppingCart"
 import { useLocalStorage } from "../hooks/useLocalStorage"
 
@@ -81,18 +81,20 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
         })
     }
 
+    const value = useMemo(() => ({
+        getItemQuantity,
+        increaseCartQuantity,
+        decreaseCartQuantity,
+        removeFromCart,
+        openCart,
+        closeCart,
+        shoppingCartItems,
+        cartQuantity,
+    }), [getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart, openCart, closeCart, shoppingCartItems, cartQuantity])
+
     return (
         <ShoppingCartContext.Provider
-            value={{
-                getItemQuantity,
-                increaseCartQuantity,
-                decreaseCartQuantity,
-                removeFromCart,
-                openCart,
-                closeCart,
-                shoppingCartItems,
-                cartQuantity,
-            }}
+            value={value}
         >
             {children}
             <ShoppingCart isOpen={isOpen} products={[]} />
