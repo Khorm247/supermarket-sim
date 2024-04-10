@@ -27,7 +27,7 @@ export default function App() {
             <NavBar />
             <Routes>
                 <Route path="/" element={<Overview/>} />
-                {<Route path="/api/cart" element={<ShoppingCart products={products} isOpen={false}/>} />}
+                <Route path="/api/cart" element={<ShoppingCart isOpen={false}/>} />
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
                 <Route path="/api/markets" element={<MarketList/>}/>
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>

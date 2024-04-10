@@ -98,7 +98,7 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
             value={value}
         >
             {children}
-            <ShoppingCart isOpen={isOpen} products={[]} />
+            <ShoppingCart isOpen={isOpen} />
         </ShoppingCartContext.Provider>
     )
 }
