@@ -19,7 +19,7 @@ export default function useInventory() {
     }
 
     function addCategory(category: string) {
-        axios.put(`/api/inventory/${inventory?.id}`, category, {headers:
+        axios.put(`/api/inventory/${inventory.id}`, category, {headers:
                 {"Content-Type": "text/plain"}})
             .then(fetchInventory)
             .catch((error) => console.log(error));
