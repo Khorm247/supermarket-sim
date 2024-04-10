@@ -9,7 +9,7 @@ type ShoppingCartProps = {
     products: Product[],
 }
 
-export function ShoppingCart(props: ShoppingCartProps) {
+export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
     const { closeCart, shoppingCartItems } = useShoppingCart()
     return (
         <Offcanvas show={props.isOpen} onHide={closeCart} placement="end">
@@ -27,7 +27,7 @@ export function ShoppingCart(props: ShoppingCartProps) {
                             shoppingCartItems.reduce((total, shoppingCartItem) => {
                                 console.log(shoppingCartItems)
                                 const item = props.products.find(i => i.id === shoppingCartItem.id)
-                                return total + (item?.pricePerBox || 0) * shoppingCartItem.quantity
+                                return total + (item?.pricePerBox ?? 0) * shoppingCartItem.quantity
                             }, 0)
                         )}
                     </div>

@@ -9,7 +9,7 @@ type ShoppingCartItemProps = {
     products: Product[]
 }
 
-export function ShoppingCartItem(props: ShoppingCartItemProps) {
+export function ShoppingCartItem(props: Readonly<ShoppingCartItemProps>) {
     const { removeFromCart } = useShoppingCart()
     const item = props.products.find(i => i.id === props.id)
     if (item == null) return null
