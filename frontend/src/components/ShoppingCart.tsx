@@ -1,15 +1,24 @@
-import { Offcanvas, Stack } from "react-bootstrap"
-import { useShoppingCart } from "../context/ShoppingCartContext"
+import {Offcanvas, Stack, Table} from "react-bootstrap"
+import {useShoppingCart} from "../context/ShoppingCartContext"
 import useProduct from "../hooks/useProduct.ts";
 
 type ShoppingCartProps = {
     isOpen: boolean,
 }
 
+
 export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
     const { closeCart, shoppingCartItems } = useShoppingCart()
     const { products } = useProduct()
-    console.log(shoppingCartItems)
+
+    function getTotal() {
+        return shoppingCartItems.reduce((total, item) => {
+            const product = products.find(product => product.id === item.id)
+            if (product == null) return total
+            return total + product.pricePerBox * item.quantity
+        }, 0)
+    }
+
     return (
         <Offcanvas show={props.isOpen} onHide={closeCart} placement="end">
             <Offcanvas.Header closeButton>
@@ -17,14 +26,27 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <Stack gap={3}>
-                    {shoppingCartItems.map((item) => (
-                        <div>
-                            <span>{products.find(product => product.id === item.id)?.name}</span>
-                            <span>{products.find(product => product.id === item.id)?.pricePerBox}</span>
-                            <span>{item.quantity}</span>
-                        </div>
-                    ))}
-
+                    <Table striped bordered hover>
+                        <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price per box</th>
+                        </tr>
+                        </thead>
+                        {shoppingCartItems.map((item) => (
+                            <tbody key={item.id}>
+                                <tr>
+                                    <td>{products.find(product => product.id === item.id)?.name}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>{products.find(product => product.id === item.id)?.pricePerBox}</td>
+                                </tr>
+                            </tbody>
+                        ))}
+                    </Table>
+                    <div>
+                        Total: {getTotal()}
+                    </div>
                 </Stack>
             </Offcanvas.Body>
         </Offcanvas>
