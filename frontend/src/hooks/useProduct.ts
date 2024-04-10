@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {Product} from "../types/Product.ts";
 import axios from "axios";
 
-export default function useCats() {
+export default function useProduct() {
     const [products, setProduct] = useState<Product[]>([]);
 
     function fetchProducts() {
