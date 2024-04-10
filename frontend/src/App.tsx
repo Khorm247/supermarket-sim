@@ -13,8 +13,6 @@ import Upgrade from "./pages/market/Upgrade.tsx";
 import {Product} from "./types/Product.ts";
 import {useState} from "react";
 import useInventory from "./hooks/useInventory.ts";
-import { ShoppingCartProvider } from "./context/ShoppingCartContext.tsx";
-import {ShoppingCart} from "./components/ShoppingCart.tsx";
 
 export default function App() {
 
@@ -23,11 +21,11 @@ export default function App() {
     const {inventory, addCategory} = useInventory();
 
     return (
-        <ShoppingCartProvider>
+        <>
             <NavBar />
             <Routes>
                 <Route path="/" element={<Overview/>} />
-                {<Route path="/api/cart" element={<ShoppingCart products={products} isOpen={false}/>} />}
+                <Route path="/api/cart" element={<h1>Shopping Cart</h1>} />
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
                 <Route path="/api/markets" element={<MarketList/>}/>
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>
@@ -37,6 +35,6 @@ export default function App() {
                 <Route path="/api/products/:id/delete" element={<DeleteProduct deleteProduct={deleteProduct}/>}/>
                 <Route path="/api/upgrade" element={<Upgrade addCategory={addCategory} inventory={inventory}/>}/>
             </Routes>
-        </ShoppingCartProvider>
+        </>
     )
 }
