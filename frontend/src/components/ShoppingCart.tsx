@@ -1,4 +1,4 @@
-import {Offcanvas, Stack, Table} from "react-bootstrap"
+import {Button, Offcanvas, Stack, Table} from "react-bootstrap"
 import {useShoppingCart} from "../context/ShoppingCartContext"
 import useProduct from "../hooks/useProduct.ts";
 
@@ -8,7 +8,7 @@ type ShoppingCartProps = {
 
 
 export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
-    const { closeCart, shoppingCartItems } = useShoppingCart()
+    const { closeCart, shoppingCartItems, resetShoppingCart} = useShoppingCart()
     const { products } = useProduct()
 
     function getTotal() {
@@ -17,6 +17,16 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
             if (product == null) return total
             return total + product.pricePerBox * item.quantity
         }, 0)
+    }
+
+    function handleCheckoutClick() {
+        // check for balance and deduct
+
+        // update inventory
+
+
+        // remove items from cart if successful
+        resetShoppingCart()
     }
 
     return (
@@ -48,6 +58,7 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
                         Total: {getTotal()}
                     </div>
                 </Stack>
+                <Button variant="primary" onClick={handleCheckoutClick}>Checkout</Button>
             </Offcanvas.Body>
         </Offcanvas>
     )
