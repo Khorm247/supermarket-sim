@@ -1,16 +1,11 @@
 import {Market} from "../../types/Market.ts";
-import {useEffect, useState} from "react";
-import MarketService from "../../services/MarketService.tsx";
 
-const marketService = new MarketService();
-export default function ProductList() {
-    const [markets, setMarkets] = useState<Market[]>([]);
+type MarketListProps = {
+    markets: Market[]
+}
 
-    useEffect(() => {
-        marketService.getAllMarkets().then((response) => {
-            setMarkets(response.data);
-        });
-    }, []);
+
+export default function MarketList(props: Readonly<MarketListProps>) {
 
     return (
         <div>
@@ -27,7 +22,7 @@ export default function ProductList() {
                 </tr>
                 </thead>
                 <tbody>
-                {markets.map((market) => (
+                {props.markets.map((market) => (
                     <tr key={market.id}>
                         <td>{market.name}</td>
                         <td>{market.balance}</td>

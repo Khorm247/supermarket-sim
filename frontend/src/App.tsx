@@ -11,16 +11,39 @@ import Overview from "./pages/market/Overview.tsx";
 import InventoryList from "./pages/inventory/InventoryList.tsx";
 import Upgrade from "./pages/market/Upgrade.tsx";
 import {Product} from "./types/Product.ts";
-import {useState} from "react";
 import useInventory from "./hooks/useInventory.ts";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext.tsx";
 import {ShoppingCart} from "./components/ShoppingCart.tsx";
+import useMarket from "./hooks/useMarket.ts";
+import {useUser} from "./context/UserContext.tsx";
+import {useEffect, useState} from "react";
 
 export default function App() {
 
     const {products, saveProduct, updateProduct, deleteProduct} = useProduct();
     const [product, setProduct] = useState<Product>();
     const {inventory, addCategory} = useInventory();
+    const {markets } = useMarket();
+    const { setUserId } = useUser();
+
+    useEffect(() => {
+        // Simulate the login process because time is running out for my project
+        const simulateLogin = async () => {
+            const response = await fetch('/api/markets', {
+                method: 'GET'
+            });
+
+            if (response.ok) {
+                const marketsData = await response.json();
+                console.log('Markets Data:', marketsData);
+                if (marketsData.length > 0) {
+                    setUserId(marketsData[0].id)
+                }
+            }
+        };
+
+        simulateLogin().then(r => console.log(r));
+    }, [setUserId, markets]);
 
     return (
         <ShoppingCartProvider>
@@ -29,7 +52,7 @@ export default function App() {
                 <Route path="/" element={<Overview/>} />
                 <Route path="/api/cart" element={<ShoppingCart isOpen={false}/>} />
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
-                <Route path="/api/markets" element={<MarketList/>}/>
+                <Route path="/api/markets" element={<MarketList markets={markets}/>}/>
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>
                 <Route path="/api/products/new" element={<NewProduct saveProduct={saveProduct}/>}/>
                 <Route path="/api/products/:id" element={<h1>Home</h1>}/>

@@ -3,20 +3,11 @@ import {Market} from "../types/Market.ts";
 import axios from "axios";
 
 export default function useMarket() {
-    const [market, setMarket] = useState<Market>({
-        id: "",
-        name: "",
-        balance: 0,
-        maximumStorage: 0,
-        currentStorage: 0,
-        maximumShelfSpace: 0,
-        currentShelfSpace: 0,
-        products: [],
-    });
+    const [markets, setMarkets] = useState<Market[]>([]);
 
     function fetchMarkets() {
         axios.get('/api/markets')
-            .then((response) => setMarket(response.data))
+            .then((response) => setMarkets(response.data))
             .catch((error) => console.error(error));
     }
 
@@ -52,7 +43,7 @@ export default function useMarket() {
     }, []);
 
     return {
-        market,
+        markets,
         saveMarket,
         updateMarket,
         deleteMarket
