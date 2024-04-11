@@ -21,6 +21,7 @@ type ShoppingCartContext = {
     removeFromCart: (id: string) => void
     cartQuantity: number
     shoppingCartItems: ShoppingCartItem[]
+    resetShoppingCart: () => void
 }
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext)
@@ -46,6 +47,7 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
     const getItemQuantity = useCallback((id: string) => {
         return shoppingCartItems.find(item => item.id === id)?.quantity || 0
     }, [shoppingCartItems])
+
     const increaseCartQuantity = useCallback((id: string) => {
         setShoppingCartItems(currItems => {
             if (currItems.find(item => item.id === id) == null) {
@@ -82,6 +84,10 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
         })
     }, [setShoppingCartItems])
 
+    const resetShoppingCart = useCallback(() => {
+        setShoppingCartItems([])
+    }, [setShoppingCartItems])
+
     const value = useMemo(() => ({
         getItemQuantity,
         increaseCartQuantity,
@@ -91,7 +97,8 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
         closeCart,
         shoppingCartItems,
         cartQuantity,
-    }), [getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart, openCart, closeCart, shoppingCartItems, cartQuantity])
+        resetShoppingCart
+    }), [getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart, openCart, closeCart, shoppingCartItems, cartQuantity, resetShoppingCart])
 
     return (
         <ShoppingCartContext.Provider
