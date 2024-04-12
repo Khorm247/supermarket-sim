@@ -23,10 +23,11 @@ export default function App() {
     const {products, saveProduct, updateProduct, deleteProduct} = useProduct();
     const [product, setProduct] = useState<Product>();
     const {inventory, addCategory} = useInventory();
-    const {markets } = useMarket();
+    const {markets} = useMarket();
     const { setUserId } = useUser();
 
     const simulateLogin = async () => {
+        if(markets.length === 0) return;
         setUserId(markets[0].id)
     };
 
@@ -39,7 +40,7 @@ export default function App() {
             <NavBar />
             <Routes>
                 <Route path="/" element={<Overview/>} />
-                <Route path="/api/cart" element={<ShoppingCart isOpen={false}/>} />
+                <Route path="/api/cart" element={<ShoppingCart isOpen={false}/>}/>
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
                 <Route path="/api/markets" element={<MarketList markets={markets}/>}/>
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>

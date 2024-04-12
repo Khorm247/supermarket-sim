@@ -8,7 +8,7 @@ type ShoppingCartProviderProps = {
 }
 
 type ShoppingCartItem = {
-    id: string,
+    productId: string,
     quantity: number
 }
 
@@ -45,16 +45,16 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
     const openCart = useCallback(() => setIsOpen(true), [])
     const closeCart = useCallback(() => setIsOpen(false), [])
     const getItemQuantity = useCallback((id: string) => {
-        return shoppingCartItems.find(item => item.id === id)?.quantity || 0
+        return shoppingCartItems.find(item => item.productId === id)?.quantity || 0
     }, [shoppingCartItems])
 
     const increaseCartQuantity = useCallback((id: string) => {
         setShoppingCartItems(currItems => {
-            if (currItems.find(item => item.id === id) == null) {
-                return [...currItems, { id, quantity: 1 }]
+            if (currItems.find(item => item.productId === id) == null) {
+                return [...currItems, { productId: id, quantity: 1 }]
             } else {
                 return currItems.map(item => {
-                    if (item.id === id) {
+                    if (item.productId === id) {
                         return { ...item, quantity: item.quantity + 1 }
                     } else {
                         return item
@@ -65,11 +65,11 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
     }, [setShoppingCartItems])
     const decreaseCartQuantity = useCallback((id: string) => {
         setShoppingCartItems(currItems => {
-            if (currItems.find(item => item.id === id)?.quantity === 1) {
-                return currItems.filter(item => item.id !== id)
+            if (currItems.find(item => item.productId === id)?.quantity === 1) {
+                return currItems.filter(item => item.productId !== id)
             } else {
                 return currItems.map(item => {
-                    if (item.id === id) {
+                    if (item.productId === id) {
                         return { ...item, quantity: item.quantity - 1 }
                     } else {
                         return item
@@ -80,7 +80,7 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
     }, [setShoppingCartItems])
     const removeFromCart = useCallback((id: string) => {
         setShoppingCartItems(currItems => {
-            return currItems.filter(item => item.id !== id)
+            return currItems.filter(item => item.productId !== id)
         })
     }, [setShoppingCartItems])
 
@@ -101,9 +101,7 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
     }), [getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart, openCart, closeCart, shoppingCartItems, cartQuantity, resetShoppingCart])
 
     return (
-        <ShoppingCartContext.Provider
-            value={value}
-        >
+        <ShoppingCartContext.Provider value={value}>
             {children}
             <ShoppingCart isOpen={isOpen} />
         </ShoppingCartContext.Provider>

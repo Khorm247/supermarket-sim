@@ -4,6 +4,7 @@ import de.neuefische.backend.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -38,9 +39,17 @@ public class CartService {
             return "not enough storage";
         }
 
-        if(market.getBalance().compareTo(cart.getTotalPrice()) < 0){
+        BigDecimal marketBalance = market.getBalance();
+        BigDecimal cartTotalPrice = cart.getTotalPrice();
+
+        if (marketBalance == null || cartTotalPrice == null) {
+            throw new IllegalArgumentException("marketBalance or cartTotalPrice is null");
+        }
+
+        if (marketBalance.compareTo(cartTotalPrice) < 0) {
             return "not enough balance";
         }
+
         market.setBalance(market.getBalance().subtract(cart.getTotalPrice()));
         market.setCurrentStorage(market.getCurrentStorage() + cartTotalQuantity);
         marketService.updateMarket(market);

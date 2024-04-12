@@ -44,6 +44,7 @@ export default function useMarket() {
 
     return {
         markets,
+        fetchMarkets,
         saveMarket,
         updateMarket,
         deleteMarket

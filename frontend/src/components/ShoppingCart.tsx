@@ -1,32 +1,77 @@
 import {Button, Offcanvas, Stack, Table} from "react-bootstrap"
 import {useShoppingCart} from "../context/ShoppingCartContext"
 import useProduct from "../hooks/useProduct.ts";
+import {useUser} from "../context/UserContext.tsx";
+import {useNavigate} from "react-router-dom";
+import useInventory from "../hooks/useInventory.ts";
+import useMarket from "../hooks/useMarket.ts";
 
 type ShoppingCartProps = {
     isOpen: boolean,
 }
 
-
 export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
     const { closeCart, shoppingCartItems, resetShoppingCart} = useShoppingCart()
     const { products } = useProduct()
+    const { fetchInventory } = useInventory()
+    const { fetchMarkets } = useMarket()
+    const { userId } = useUser()
+    const navigate = useNavigate()
 
     function getTotal() {
         return shoppingCartItems.reduce((total, item) => {
-            const product = products.find(product => product.id === item.id)
+            const product = products.find(product => product.id === item.productId)
             if (product == null) return total
             return total + product.pricePerBox * item.quantity
         }, 0)
     }
 
-    function handleCheckoutClick() {
-        // check for balance and deduct
+    async function handleCheckoutClick() {
+        // checkout logic
+        // send order as JSON to backend
+        const order = {
+            userId: userId,
+            cartItems: shoppingCartItems,
+            totalPrice: getTotal()
+        }
+        const response = await fetch(`/api/cart/checkout/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
+        })
 
+        if (!response.ok) {
+            alert("Failed to checkout")
+            throw new Error('Failed to checkout')
+        }
+
+        const responseBody = await response.text()
+
+        if(responseBody === "checkout processed successfully"){
+
+            fetchInventory()
+            fetchMarkets();
+            alert(responseBody)
+
+            resetShoppingCart()
+            closeCart()
+            navigate('/api/inventory')
+        }
+
+        // if successful
         // update inventory
+        // remove items from cart
 
+        // if not successful
+        // show error message
 
-        // remove items from cart if successful
+    }
+
+    function handleResetCartClick() {
         resetShoppingCart()
+        closeCart()
     }
 
     return (
@@ -45,11 +90,11 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
                         </tr>
                         </thead>
                         {shoppingCartItems.map((item) => (
-                            <tbody key={item.id}>
+                            <tbody key={item.productId}>
                                 <tr>
-                                    <td>{products.find(product => product.id === item.id)?.name}</td>
+                                    <td>{products.find(product => product.id === item.productId)?.name}</td>
                                     <td>{item.quantity}</td>
-                                    <td>{products.find(product => product.id === item.id)?.pricePerBox}</td>
+                                    <td>{products.find(product => product.id === item.productId)?.pricePerBox}</td>
                                 </tr>
                             </tbody>
                         ))}
@@ -59,6 +104,7 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
                     </div>
                 </Stack>
                 <Button variant="primary" onClick={handleCheckoutClick}>Checkout</Button>
+                <Button variant="danger" onClick={handleResetCartClick}>ResetCart</Button>
             </Offcanvas.Body>
         </Offcanvas>
     )
