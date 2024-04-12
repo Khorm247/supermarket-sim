@@ -31,8 +31,8 @@ public class CartController {
     }
 
     @PostMapping("/checkout/{marketId}")
-    public String checkoutCart(@PathVariable String marketId){
-        return cartService.checkoutCart(marketId);
+    public String checkoutCart(@PathVariable String marketId, @RequestBody Cart cart){
+        return cartService.checkoutCart(marketId, cart);
     }
 
     @PutMapping("/{cartId}")

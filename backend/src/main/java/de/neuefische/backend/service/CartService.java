@@ -1,6 +1,6 @@
 package de.neuefische.backend.service;
 
-import de.neuefische.backend.model.Cart;
+import de.neuefische.backend.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +10,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CartService {
 
+    private final MarketService marketService;
+    private final InventoryService inventoryService;
+
     public List<Cart> getAllCarts() {
-        return null;
+        return List.of();
     }
 
     public Cart getCartByMarketId(String marketId) {
@@ -26,23 +29,34 @@ public class CartService {
         return null;
     }
 
-    public String checkoutCart(String marketId) {
-        // todo: implement method
-        // get market by id
+    public String checkoutCart(String marketId, Cart cart) {
+        Market market = marketService.getMarketById(marketId);
+        Inventory inventory = inventoryService.getInventoryByPlayerId(marketId);
 
-        // get cart by market id
-        // check if cart quantity can fit in storage
-        // otherwise return error
+        int cartTotalQuantity = cart.getCartItems().stream().mapToInt(CartItem::getQuantity).sum();
+        if(market.getCurrentStorage() + cartTotalQuantity > market.getMaximumStorage()){
+            return "not enough storage";
+        }
 
-        // check balance
-        // if balance is not enough return error
-        // otherwise reduce balance
+        if(market.getBalance().compareTo(cart.getTotalPrice()) < 0){
+            return "not enough balance";
+        }
+        market.setBalance(market.getBalance().subtract(cart.getTotalPrice()));
+        market.setCurrentStorage(market.getCurrentStorage() + cartTotalQuantity);
+        marketService.updateMarket(market);
 
-        // get inventory by market id
-        // increase inventory
+        List<InventoryItem> items = inventory.getInventoryItems();
+        for (CartItem cartItem : cart.getCartItems()) {
+            for (InventoryItem inventoryItem : items) {
+                if(cartItem.getProductId().equals(inventoryItem.getProductId())){
+                    inventoryItem.setQuantityInStorage(inventoryItem.getQuantityInStorage() + cartItem.getQuantity());
+                }
+            }
+        }
+        inventory.setInventoryItems(items);
+        inventoryService.updateInventory(inventory);
         // reduce cart (for now this is done in frontend)
 
-        // return success message
         return "checkout processed successfully";
     }
 

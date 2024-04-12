@@ -15,4 +15,8 @@ public class Inventory {
     private String id;
     private String playerId;
     private List<InventoryItem> inventoryItems;
+
+    public void updateInventoryItems(List<InventoryItem> inventoryItems) {
+        this.inventoryItems = inventoryItems;
+    }
 }

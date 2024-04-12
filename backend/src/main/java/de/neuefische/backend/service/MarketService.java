@@ -20,6 +20,10 @@ public class MarketService {
         return marketRepository.findAll();
     }
 
+    public Market getMarketById(String marketId) {
+        return marketRepository.findById(marketId).orElseThrow();
+    }
+
     public Market addNewMarket(String marketName) {
         Market market = Market.builder()
                 .name(marketName)
@@ -49,6 +53,10 @@ public class MarketService {
                 .build();
         marketRepository.save(updatedMarket);
         return updatedMarket;
+    }
+
+    public void updateMarket(Market market) {
+        marketRepository.save(market);
     }
 
     public ResponseEntity<String> deleteMarket(String marketId) {
