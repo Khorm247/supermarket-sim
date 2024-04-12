@@ -26,24 +26,13 @@ export default function App() {
     const {markets } = useMarket();
     const { setUserId } = useUser();
 
+    const simulateLogin = async () => {
+        setUserId(markets[0].id)
+    };
+
     useEffect(() => {
-        // Simulate the login process because time is running out for my project
-        const simulateLogin = async () => {
-            const response = await fetch('/api/markets', {
-                method: 'GET'
-            });
-
-            if (response.ok) {
-                const marketsData = await response.json();
-                console.log('Markets Data:', marketsData);
-                if (marketsData.length > 0) {
-                    setUserId(marketsData[0].id)
-                }
-            }
-        };
-
-        simulateLogin().then(r => console.log(r));
-    }, [setUserId, markets]);
+        simulateLogin().then(() => console.log('Logged in'));
+    }, [markets]);
 
     return (
         <ShoppingCartProvider>
