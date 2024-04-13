@@ -58,15 +58,8 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
             resetShoppingCart()
             closeCart()
             navigate('/api/inventory')
+
         }
-
-        // if successful
-        // update inventory
-        // remove items from cart
-
-        // if not successful
-        // show error message
-
     }
 
     function handleResetCartClick() {
