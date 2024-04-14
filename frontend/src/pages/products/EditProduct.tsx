@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {FormEvent, useState} from "react";
 import {Product} from "../../types/Product.ts";
 import {Category} from "../../types/Category.ts";
+import Container from "react-bootstrap/Container";
 
 type UpdateProductProps = {
     product: Product,
@@ -45,7 +46,7 @@ export default function EditProduct(props: Readonly<UpdateProductProps>) {
     }
 
     return (
-        <div>
+        <Container data-bs-theme="dark">
             <h1>Edit Product</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
@@ -98,6 +99,6 @@ export default function EditProduct(props: Readonly<UpdateProductProps>) {
                 </div>
                 <button type="submit" className="btn btn-primary">Produkt speichern</button>
             </form>
-        </div>
+        </Container>
     )
 }

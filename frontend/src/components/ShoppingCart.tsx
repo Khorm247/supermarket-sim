@@ -73,7 +73,7 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
                 <Offcanvas.Title>Cart</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                <Stack gap={3}>
+                <Stack gap={3} data-bs-theme="dark">
                     <Table striped bordered hover>
                         <thead>
                         <tr>

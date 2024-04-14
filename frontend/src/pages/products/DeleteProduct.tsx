@@ -2,6 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {FormEvent, useEffect, useState} from "react";
 import {Alert, Button, Table} from "react-bootstrap";
 import axios from "axios";
+import Container from "react-bootstrap/Container";
 
 type Product = {
     id: string,
@@ -41,12 +42,12 @@ export default function ConfirmDeleteProduct(props: Readonly<ConfirmDeleteProduc
     }
 
     return (
-        <div>
+        <Container data-bs-theme="dark">
             <Alert variant="danger">
                 Wollen Sie das Produkt wirklich löschen?
             </Alert>
             {product && (
-                <Table striped bordered hover size="sm">
+                <Table striped bordered hover variant="dark" size="sm">
                     <tbody>
                         <tr><td>Name</td><td>{product.name}</td></tr>
                         <tr><td>Producer</td><td>{product.producer}</td></tr>
@@ -59,8 +60,8 @@ export default function ConfirmDeleteProduct(props: Readonly<ConfirmDeleteProduc
             )}
             <form onSubmit={handleDelete}>
                 <Button variant="danger" type="submit">Delete</Button>
-                <Button variant="primary" onClick={() => navigate("/api/products")}>Cancel</Button>
+                <Button variant="secondary" onClick={() => navigate("/api/products")}>Cancel</Button>
             </form>
-        </div>
+        </Container>
     )
 }

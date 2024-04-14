@@ -1,4 +1,6 @@
+import { Table } from "react-bootstrap";
 import {Market} from "../../types/Market.ts";
+import Container from "react-bootstrap/Container";
 
 type MarketListProps = {
     markets: Market[]
@@ -8,9 +10,9 @@ type MarketListProps = {
 export default function MarketList(props: Readonly<MarketListProps>) {
 
     return (
-        <div>
+        <Container>
             <h1>Market List</h1>
-            <table className="table">
+            <Table className="table" striped bordered hover variant="dark" size="sm">
                 <thead>
                 <tr>
                     <th>Market Name</th>
@@ -33,7 +35,7 @@ export default function MarketList(props: Readonly<MarketListProps>) {
                     </tr>
                 ))}
                 </tbody>
-            </table>
-        </div>
+            </Table>
+        </Container>
     )
 }
