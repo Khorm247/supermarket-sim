@@ -17,7 +17,10 @@ export default function useInventory() {
     function fetchInventory() {
         if (!playerId) return;
         axios.get('/api/inventory/player/' + playerId)
-            .then((response) => setInventory(response.data))
+            .then((response) => {
+                console.log(response.data)
+                setInventory(response.data)
+            })
             .catch((error) => console.error(error));
     }
 

@@ -2,9 +2,9 @@ import {Button, Offcanvas, Stack, Table} from "react-bootstrap"
 import {useShoppingCart} from "../context/ShoppingCartContext"
 import useProduct from "../hooks/useProduct.ts";
 import {useUser} from "../context/UserContext.tsx";
-import {useNavigate} from "react-router-dom";
 import useInventory from "../hooks/useInventory.ts";
 import useMarket from "../hooks/useMarket.ts";
+import axios from "axios";
 
 type ShoppingCartProps = {
     isOpen: boolean,
@@ -16,7 +16,6 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
     const { fetchInventory } = useInventory()
     const { fetchMarkets } = useMarket()
     const { userId } = useUser()
-    const navigate = useNavigate()
 
     function getTotal() {
         return shoppingCartItems.reduce((total, item) => {
@@ -26,7 +25,7 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
         }, 0)
     }
 
-    async function handleCheckoutClick() {
+    function handleCheckoutClick() {
         // checkout logic
         // send order as JSON to backend
         const order = {
@@ -34,6 +33,19 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
             cartItems: shoppingCartItems,
             totalPrice: getTotal()
         }
+
+        axios.post(`/api/cart/checkout/${userId}`, order)
+            .then((response) => {
+                console.log(response.data)
+                fetchInventory()
+                fetchMarkets();
+                //alert(response.data)
+                resetShoppingCart()
+                closeCart()
+
+            })
+            .catch((error) => console.error(error));
+        /*
         const response = await fetch(`/api/cart/checkout/${userId}`, {
             method: 'POST',
             headers: {
@@ -58,8 +70,8 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
             resetShoppingCart()
             closeCart()
             navigate('/api/inventory')
-
         }
+    */
     }
 
     function handleResetCartClick() {
