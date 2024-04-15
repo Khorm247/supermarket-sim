@@ -41,7 +41,7 @@ export default function App() {
             <NavBar />
             <StatusBar markets={markets}/>
             <Routes>
-                <Route path="/" element={<Overview/>} />
+                <Route path="/" element={<Overview markets={markets} inventory={inventory}/>} />
                 <Route path="/api/cart" element={<ShoppingCart products={products} fetchInventory={fetchInventory} fetchMarkets={fetchMarkets} isOpen={false}/>}/>
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
                 <Route path="/api/markets" element={<MarketList markets={markets}/>}/>
