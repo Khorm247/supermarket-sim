@@ -2,9 +2,13 @@ import {createContext, ReactNode, useContext, useMemo, useState, useCallback} fr
 
 import { ShoppingCart } from "../components/ShoppingCart"
 import { useLocalStorage } from "../hooks/useLocalStorage"
+import {Product} from "../types/Product.ts";
 
 type ShoppingCartProviderProps = {
-    children: ReactNode
+    children: ReactNode,
+    products: Product[],
+    fetchInventory: () => void,
+    fetchMarkets: () => void
 }
 
 type ShoppingCartItem = {
@@ -30,7 +34,7 @@ export function useShoppingCart() {
     return useContext(ShoppingCartContext)
 }
 
-export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProviderProps>) {
+export function ShoppingCartProvider({ children, fetchMarkets, fetchInventory, products }: Readonly<ShoppingCartProviderProps>) {
     const [isOpen, setIsOpen] = useState(false)
     const [shoppingCartItems, setShoppingCartItems] = useLocalStorage<ShoppingCartItem[]>(
         "shopping-cart",
@@ -103,7 +107,7 @@ export function ShoppingCartProvider({ children }: Readonly<ShoppingCartProvider
     return (
         <ShoppingCartContext.Provider value={value}>
             {children}
-            <ShoppingCart isOpen={isOpen} />
+            <ShoppingCart fetchMarkets={fetchMarkets} fetchInventory={fetchInventory} products={products} isOpen={isOpen} />
         </ShoppingCartContext.Provider>
     )
 }

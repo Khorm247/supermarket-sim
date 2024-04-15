@@ -1,25 +1,24 @@
 import {Button, Offcanvas, Stack, Table} from "react-bootstrap"
 import {useShoppingCart} from "../context/ShoppingCartContext"
-import useProduct from "../hooks/useProduct.ts";
 import {useUser} from "../context/UserContext.tsx";
-import useInventory from "../hooks/useInventory.ts";
-import useMarket from "../hooks/useMarket.ts";
 import axios from "axios";
+import {Product} from "../types/Product.ts";
 
 type ShoppingCartProps = {
     isOpen: boolean,
+    products: Product[],
+    fetchInventory: () => void,
+    fetchMarkets: () => void
 }
 
 export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
     const { closeCart, shoppingCartItems, resetShoppingCart} = useShoppingCart()
-    const { products } = useProduct()
-    const { fetchInventory } = useInventory()
-    const { fetchMarkets } = useMarket()
+
     const { userId } = useUser()
 
     function getTotal() {
         return shoppingCartItems.reduce((total, item) => {
-            const product = products.find(product => product.id === item.productId)
+            const product = props.products.find(product => product.id === item.productId)
             if (product == null) return total
             return total + product.pricePerBox * item.quantity
         }, 0)
@@ -37,41 +36,14 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
         axios.post(`/api/cart/checkout/${userId}`, order)
             .then((response) => {
                 console.log(response.data)
-                fetchInventory()
-                fetchMarkets();
-                //alert(response.data)
+                props.fetchInventory()
+                props.fetchMarkets();
+
                 resetShoppingCart()
                 closeCart()
 
             })
             .catch((error) => console.error(error));
-        /*
-        const response = await fetch(`/api/cart/checkout/${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(order)
-        })
-
-        if (!response.ok) {
-            alert("Failed to checkout")
-            throw new Error('Failed to checkout')
-        }
-
-        const responseBody = await response.text()
-
-        if(responseBody === "checkout processed successfully"){
-
-            fetchInventory()
-            fetchMarkets();
-            alert(responseBody)
-
-            resetShoppingCart()
-            closeCart()
-            navigate('/api/inventory')
-        }
-    */
     }
 
     function handleResetCartClick() {
@@ -97,9 +69,9 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
                         {shoppingCartItems.map((item) => (
                             <tbody key={item.productId}>
                                 <tr>
-                                    <td>{products.find(product => product.id === item.productId)?.name}</td>
+                                    <td>{props.products.find(product => product.id === item.productId)?.name}</td>
                                     <td>{item.quantity}</td>
-                                    <td>{products.find(product => product.id === item.productId)?.pricePerBox}</td>
+                                    <td>{props.products.find(product => product.id === item.productId)?.pricePerBox}</td>
                                 </tr>
                             </tbody>
                         ))}

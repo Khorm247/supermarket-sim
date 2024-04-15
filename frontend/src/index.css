@@ -1,12 +1,12 @@
 body, :root {
     margin: 0;
     padding: 0;
-    padding-top: 3rem;
+    padding-top: 2.6rem;
 }
 
 body {
     background-color: #8c8989;
-    color: #cccccc;
+    color: #2c2b2b;
 }
 
 .button-primary {

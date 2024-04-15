@@ -17,13 +17,14 @@ import {ShoppingCart} from "./components/ShoppingCart.tsx";
 import useMarket from "./hooks/useMarket.ts";
 import {useUser} from "./context/UserContext.tsx";
 import {useEffect, useState} from "react";
+import StatusBar from "./components/StatusBar.tsx";
 
 export default function App() {
 
     const {products, saveProduct, updateProduct, deleteProduct} = useProduct();
     const [product, setProduct] = useState<Product>();
-    const {inventory, addCategory} = useInventory();
-    const {markets} = useMarket();
+    const {inventory, addCategory, fetchInventory} = useInventory();
+    const {markets, fetchMarkets} = useMarket();
     const { setUserId } = useUser();
 
     const simulateLogin = async () => {
@@ -36,11 +37,12 @@ export default function App() {
     }, [markets]);
 
     return (
-        <ShoppingCartProvider>
+        <ShoppingCartProvider products={products} fetchInventory={fetchInventory} fetchMarkets={fetchMarkets}>
             <NavBar />
+            <StatusBar markets={markets}/>
             <Routes>
                 <Route path="/" element={<Overview/>} />
-                <Route path="/api/cart" element={<ShoppingCart isOpen={false}/>}/>
+                <Route path="/api/cart" element={<ShoppingCart products={products} fetchInventory={fetchInventory} fetchMarkets={fetchMarkets} isOpen={false}/>}/>
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
                 <Route path="/api/markets" element={<MarketList markets={markets}/>}/>
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>
