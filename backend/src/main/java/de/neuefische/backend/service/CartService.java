@@ -69,6 +69,38 @@ public class CartService {
         return "checkout processed successfully";
     }
 
+    public String serveCustomer(String marketId, Customer customer) {
+        // Update inventory
+        Inventory inventory = inventoryService.getInventoryByPlayerId(marketId);
+        List<InventoryItem> inventoryItems = inventory.getInventoryItems();
+
+        CartItem boughtProduct = customer.getCartItem();
+        List<InventoryItem> updatedInventoryItems = inventoryItems.stream()
+                .map(inventoryItem -> {
+                    if (inventoryItem.getProductId().equals(boughtProduct.getProductId())) {
+                        return InventoryItem.builder()
+                                .productId(inventoryItem.getProductId())
+                                .product(inventoryItem.getProduct())
+                                .quantityInShelf(inventoryItem.getQuantityInShelf())
+                                // todo: change from storage to shelf (just for demo)
+                                .quantityInStorage(inventoryItem.getQuantityInStorage() - boughtProduct.getQuantity())
+                                .build();
+                    }
+                    return inventoryItem;
+                })
+                .toList();
+        inventory.updateInventoryItems(updatedInventoryItems);
+        inventoryService.updateInventory(inventory);
+
+        // Update market balance
+        Market market = marketService.getMarketById(marketId);
+        market.setBalance(market.getBalance().add(customer.getTotalPrice()));
+        market.setCurrentStorage(market.getCurrentStorage() - boughtProduct.getQuantity());
+        // todo: change from storage to shelf (just for demo)
+        marketService.updateMarket(market);
+
+        return "Customer served";
+    }
 
     public String deleteCart(String cartId) {
         return null;

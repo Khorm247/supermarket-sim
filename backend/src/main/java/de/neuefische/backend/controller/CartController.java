@@ -1,6 +1,7 @@
 package de.neuefische.backend.controller;
 
 import de.neuefische.backend.model.Cart;
+import de.neuefische.backend.model.Customer;
 import de.neuefische.backend.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,12 @@ public class CartController {
     @PostMapping("/checkout/{marketId}")
     public String checkoutCart(@PathVariable String marketId, @RequestBody Cart cart){
         return cartService.checkoutCart(marketId, cart);
+    }
+
+    @PostMapping("/checkout/customer/{marketId}")
+    @ResponseStatus(HttpStatus.OK)
+    public String serveCustomer(@PathVariable String marketId, @RequestBody Customer customer){
+        return cartService.serveCustomer(marketId, customer);
     }
 
     @PutMapping("/{cartId}")
