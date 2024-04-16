@@ -7,7 +7,7 @@ import NewProduct from "./pages/products/NewProduct.tsx";
 import useProduct from "./hooks/useProduct.ts";
 import EditProduct from "./pages/products/EditProduct.tsx";
 import DeleteProduct from "./pages/products/DeleteProduct.tsx";
-import Overview from "./pages/market/Overview.tsx";
+import Customer from "./pages/market/Customer.tsx";
 import InventoryList from "./pages/inventory/InventoryList.tsx";
 import Upgrade from "./pages/market/Upgrade.tsx";
 import {Product} from "./types/Product.ts";
@@ -41,7 +41,7 @@ export default function App() {
             <NavBar />
             <StatusBar markets={markets}/>
             <Routes>
-                <Route path="/" element={<Overview fetchMarkets={fetchMarkets} fetchInventory={fetchInventory} markets={markets} inventory={inventory}/>} />
+                <Route path="/" element={<Customer fetchMarkets={fetchMarkets} fetchInventory={fetchInventory} markets={markets} inventory={inventory}/>} />
                 <Route path="/api/cart" element={<ShoppingCart products={products} fetchInventory={fetchInventory} fetchMarkets={fetchMarkets} isOpen={false}/>}/>
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
                 <Route path="/api/markets" element={<MarketList markets={markets}/>}/>
