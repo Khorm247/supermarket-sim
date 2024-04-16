@@ -27,7 +27,6 @@ export default function StatusBar(props: Readonly<StatusBarProps>) {
                     :
                     <div className={"small p-1"}>
                         <Row className="m-1">
-                            <Col className="m-1" sm={1}><h2>{market.name}</h2></Col>
                             <Col className="m-1" sm={2}><Money size={40}/> {market.balance}€</Col>
                             <Col>
                                 <Row className="m-1">Lagerplätze: {market.currentStorage} / {market.maximumStorage}</Row>
@@ -35,12 +34,16 @@ export default function StatusBar(props: Readonly<StatusBarProps>) {
                                     <ProgressBar className={"bg-dark-subtle"} striped max={market.maximumStorage} now={market.currentStorage}/>
                                 </Row>
                             </Col>
+                            {
+                                /*
                             <Col>
                                 <Row className="m-1">Regalplätze: {market.currentShelfSpace} / {market.maximumShelfSpace}</Row>
                                 <Row className="m-1">
                                     <ProgressBar className={"bg-dark-subtle"} striped max={market.maximumShelfSpace} now={market.currentShelfSpace}/>
                                 </Row>
                             </Col>
+                                 */
+                            }
                         </Row>
                     </div>
             }

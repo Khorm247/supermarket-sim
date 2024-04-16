@@ -18,15 +18,11 @@ export default function NavBar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <NavDropdown title={"Laden"} id={"basic-nav-dropdown"}>
-                            <NavDropdown.Item as={Link} to={"/"}>Ladenübersicht</NavDropdown.Item>
-                            <NavDropdown.Item as={Link} to={"/api/inventory"}>Bestandsliste</NavDropdown.Item>
-                        </NavDropdown>
-                        <NavDropdown title="Management" id="basic-nav-dropdown">
-                            <NavDropdown.Item as={Link} to="/api/upgrade">Laden ausbauen</NavDropdown.Item>
-                        </NavDropdown>
-
+                        <Link className="nav-link" to={"/"}>Kunden</Link>
+                        <Link className="nav-link" to={"/api/inventory"}>Bestandsliste</Link>
+                        <Link className="nav-link" to={"/api/upgrade"}>Management</Link>
                         <Link className="nav-link" to={"/api/markets"}>Märkte(Admin)</Link>
+
                         <NavDropdown title={"Produkte(Admin)"} id={"basic-nav-dropdown"}>
                             <NavDropdown.Item as={Link} to={"/api/products"}>Produktliste</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to={"/api/products/new"}>Neues Produkt</NavDropdown.Item>

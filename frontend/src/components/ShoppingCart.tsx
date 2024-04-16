@@ -62,8 +62,8 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
                         <thead>
                         <tr>
                             <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price per box</th>
+                            <th>Anzahl</th>
+                            <th>Preis</th>
                         </tr>
                         </thead>
                         {shoppingCartItems.map((item) => (
@@ -71,13 +71,13 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
                                 <tr>
                                     <td>{props.products.find(product => product.id === item.productId)?.name}</td>
                                     <td>{item.quantity}</td>
-                                    <td>{props.products.find(product => product.id === item.productId)?.pricePerBox}</td>
+                                    <td>{props.products.find(product => product.id === item.productId)?.pricePerBox}€</td>
                                 </tr>
                             </tbody>
                         ))}
                     </Table>
                     <div>
-                        Total: {getTotal()}
+                        Gesamtsumme: {getTotal()}€
                     </div>
                 </Stack>
                 <Button variant="primary" onClick={handleCheckoutClick}>Checkout</Button>
