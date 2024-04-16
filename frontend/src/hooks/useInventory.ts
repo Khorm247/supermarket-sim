@@ -2,9 +2,8 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {Inventory} from "../types/Inventory.ts";
 import {useUser} from "../context/UserContext.tsx";
-import useMarket from "./useMarket.ts";
 
-export default function useInventory() {
+export default function useInventory(fetchMarkets: () => void) {
     const [inventory, setInventory] = useState<Inventory>(
         {
             id: "",
@@ -14,13 +13,13 @@ export default function useInventory() {
     );
     const { userId } = useUser();
     const playerId = userId;
-    const { fetchMarkets } = useMarket();
 
     function fetchInventory() {
         if (!playerId) return;
         axios.get('/api/inventory/player/' + playerId)
             .then((response) => {
                 setInventory(response.data)
+                fetchMarkets()
             })
             .catch((error) => console.error(error));
     }
@@ -32,7 +31,6 @@ export default function useInventory() {
         })
             .then(() => {
                 fetchInventory()
-                fetchMarkets()
             })
             .catch((error) => {
                 console.error(error)

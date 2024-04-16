@@ -23,8 +23,8 @@ export default function App() {
 
     const {products, saveProduct, updateProduct, deleteProduct} = useProduct();
     const [product, setProduct] = useState<Product>();
-    const {inventory, addCategory, fetchInventory} = useInventory();
     const {markets, fetchMarkets, upgradeStorage} = useMarket();
+    const {inventory, addCategory, fetchInventory} = useInventory(fetchMarkets);
     const { setUserId } = useUser();
 
     const simulateLogin = async () => {
