@@ -6,6 +6,7 @@ export default function useMarket() {
     const [markets, setMarkets] = useState<Market[]>([]);
 
     function fetchMarkets() {
+        console.log("fetchMarkets");
         axios.get('/api/markets')
             .then((response) => setMarkets(response.data))
             .catch((error) => console.error(error));
@@ -32,6 +33,15 @@ export default function useMarket() {
             .catch((error) => console.log(error));
     }
 
+    function upgradeStorage(amount: number, cost: number) {
+        axios.put(`/api/markets/${markets[0].id}/upgrade`, {
+            "newCapacity": amount,
+            "upgradeCost": cost
+        })
+            .then(() => fetchMarkets())
+            .catch((error) => console.error(error));
+    }
+
     function deleteMarket(id: string) {
         axios.delete(`/api/products/${id}`)
             .then(() => fetchMarkets())
@@ -47,6 +57,7 @@ export default function useMarket() {
         fetchMarkets,
         saveMarket,
         updateMarket,
+        upgradeStorage,
         deleteMarket
     }
 }

@@ -24,7 +24,7 @@ export default function App() {
     const {products, saveProduct, updateProduct, deleteProduct} = useProduct();
     const [product, setProduct] = useState<Product>();
     const {inventory, addCategory, fetchInventory} = useInventory();
-    const {markets, fetchMarkets} = useMarket();
+    const {markets, fetchMarkets, upgradeStorage} = useMarket();
     const { setUserId } = useUser();
 
     const simulateLogin = async () => {
@@ -50,7 +50,7 @@ export default function App() {
                 <Route path="/api/products/:id" element={<h1>Home</h1>}/>
                 {product && <Route path="/api/products/:id/edit" element={<EditProduct product={product} updateProduct={updateProduct}/>}/>}
                 <Route path="/api/products/:id/delete" element={<DeleteProduct deleteProduct={deleteProduct}/>}/>
-                <Route path="/api/upgrade" element={<Upgrade addCategory={addCategory} inventory={inventory}/>}/>
+                <Route path="/api/upgrade" element={<Upgrade upgradeStorage={upgradeStorage} fetchMarkets={fetchMarkets} addCategory={addCategory} inventory={inventory}/>}/>
             </Routes>
         </ShoppingCartProvider>
     )

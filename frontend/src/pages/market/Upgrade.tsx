@@ -2,20 +2,32 @@ import {Button, Col, Row, Card} from "react-bootstrap";
 import {Inventory} from "../../types/Inventory.ts";
 import {useNavigate} from "react-router-dom";
 import Container from "react-bootstrap/Container";
+import {useEffect, useState} from "react";
 
 
 type UpgradeProps = {
-    addCategory: (category: string) => void,
+    addCategory: (category: string, cost: number) => void,
+    upgradeStorage: (amount: number, cost: number) => void,
+    fetchMarkets: () => void,
     inventory: Inventory
 }
 
 export default function Upgrade(props: Readonly<UpgradeProps>) {
+    const [alreadyBought, setAlreadyBought] = useState<string[]>([]);
     const navigate = useNavigate();
 
-    function handleUpgradeClick(category: string) {
-        console.log(category);
-        props.addCategory(category);
-        navigate("/api/inventory")
+    useEffect(() => {
+        const alreadyBoughtCategories = props.inventory.inventoryItems.map(item => item.product.category);
+        setAlreadyBought(alreadyBoughtCategories);
+    }, [props.inventory]);
+
+    function handleUpgradeClick(category: string, cost: number) {
+        props.addCategory(category, cost);
+        navigate("/api/inventory");
+    }
+
+    function handleStorageUpgradeClick(amount: number, cost: number) {
+        props.upgradeStorage(amount, cost);
     }
 
     return (
@@ -26,7 +38,9 @@ export default function Upgrade(props: Readonly<UpgradeProps>) {
                 </div>
             </Row>
             <Row>
-            <Col>
+                {
+                    /*
+                <Col>
                     <Card style={{height: '22rem'}}>
                         <Card.Img style={{height: '12rem'}} variant="top" src="https://source.unsplash.com/random/120×100/?shelf" />
                         <Card.Body>
@@ -39,6 +53,9 @@ export default function Upgrade(props: Readonly<UpgradeProps>) {
                     </Card>
                 </Col>
 
+                     */
+                }
+
                 <Col>
                     <Card style={{height: '22rem'}}>
                         <Card.Img style={{height: '12rem'}} variant="top" src="https://source.unsplash.com/random/120×100/?storage" />
@@ -47,10 +64,17 @@ export default function Upgrade(props: Readonly<UpgradeProps>) {
                             <Card.Text>
                                 erweitere dein Lager um 20 Plätze
                             </Card.Text>
-                            <Button className="button-secondary">150€</Button>
+                            <Button
+                                className="button-secondary"
+                                onClick={() => handleStorageUpgradeClick(20, 150)}
+                                disabled={alreadyBought.includes("STORAGE")}
+                            >
+                                150€
+                            </Button>
                         </Card.Body>
                     </Card>
                 </Col>
+                <Col></Col>
             </Row>
             <Row>
                 <div className="d-flex justify-content-center">
@@ -65,9 +89,22 @@ export default function Upgrade(props: Readonly<UpgradeProps>) {
                         <Card.Body>
                             <Card.Title>Fruchtlizenz</Card.Title>
                             <Card.Text>
-                                erweitere dein Sortiment um Früchte
+
+                                {
+                                    alreadyBought.includes("FRUITS")
+                                        ?
+                                        <span className="text-success fw-bold">Bereits gekauft</span>
+                                        :
+                                        "erweitere dein Sortiment um Früchte"
+                                }
                             </Card.Text>
-                            <Button onClick={() => handleUpgradeClick("FRUITS")} className="button-secondary">200€</Button>
+                            <Button
+                                onClick={() => handleUpgradeClick("FRUITS", 200)}
+                                className="button-secondary"
+                                disabled={alreadyBought.includes("FRUITS")}
+                            >
+                                200€
+                            </Button>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -78,9 +115,21 @@ export default function Upgrade(props: Readonly<UpgradeProps>) {
                         <Card.Body>
                             <Card.Title>Reinigungsproduktlizenz</Card.Title>
                             <Card.Text>
-                                erweitere dein Sortiment um Reinigungsprodukte
+                                {
+                                    alreadyBought.includes("CLEANING_SUPPLIES")
+                                        ?
+                                        <span className="text-success fw-bold">Bereits gekauft</span>
+                                        :
+                                        "erweitere dein Sortiment um Reinigungsprodukte"
+                                }
                             </Card.Text>
-                            <Button onClick={() => handleUpgradeClick("CLEANING_SUPPLIES")} className="button-secondary">250€</Button>
+                            <Button
+                                onClick={() => handleUpgradeClick("CLEANING_SUPPLIES", 250)}
+                                className="button-secondary"
+                                disabled={alreadyBought.includes("CLEANING_SUPPLIES")}
+                            >
+                                250€
+                            </Button>
                         </Card.Body>
                     </Card>
                 </Col>

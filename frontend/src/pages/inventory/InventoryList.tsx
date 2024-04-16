@@ -38,15 +38,42 @@ export default function InventoryList(props: Readonly<InventoryProps>) {
                     {props.inventory.inventoryItems.map((item) => (
                         <tr key={item.product.id} className={"fs-4"}>
                             <td>
-                                <div
-                                    className="rounded-circle bg-success"
-                                    style={{
-                                        width: "1.8rem",
-                                        height: "1.8rem",
-                                    }}
-                                >
-                                    &nbsp;
-                                </div>
+                                {
+                                    item.quantityInStorage == 0 &&
+                                    <div
+                                        className="rounded-circle bg-danger"
+                                        style={{
+                                            width: "1.8rem",
+                                            height: "1.8rem",
+                                        }}
+                                    >
+                                        &nbsp;
+                                    </div>
+                                }
+                                {
+                                    item.quantityInStorage > 0 && item.quantityInStorage < 5 &&
+                                    <div
+                                        className="rounded-circle bg-warning"
+                                        style={{
+                                            width: "1.8rem",
+                                            height: "1.8rem",
+                                        }}
+                                    >
+                                        &nbsp;
+                                    </div>
+                                }
+                                {
+                                    item.quantityInStorage >= 5 &&
+                                    <div
+                                        className="rounded-circle bg-success"
+                                        style={{
+                                            width: "1.8rem",
+                                            height: "1.8rem",
+                                        }}
+                                    >
+                                        &nbsp;
+                                    </div>
+                                }
                             </td>
                             <td>{item.product.name}</td>
                             <td>{item.product.yourPrice}€</td>

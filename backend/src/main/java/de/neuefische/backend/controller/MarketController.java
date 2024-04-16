@@ -1,6 +1,7 @@
 package de.neuefische.backend.controller;
 
 import de.neuefische.backend.model.Market;
+import de.neuefische.backend.model.StoreUpgrade;
 import de.neuefische.backend.service.MarketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,11 @@ public class MarketController {
     @ResponseStatus(HttpStatus.CREATED)
     public Market addNewMarket(@RequestBody String marketName){
         return marketService.addNewMarket(marketName);
+    }
+
+    @PutMapping("{marketId}/upgrade")
+    public String upgradeStore(@PathVariable String marketId, @RequestBody StoreUpgrade storeUpgrade){
+        return marketService.upgradeStore(marketId, storeUpgrade);
     }
 
     @PutMapping("/{marketId}")

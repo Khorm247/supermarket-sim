@@ -7,6 +7,7 @@ import Card from "react-bootstrap/esm/Card";
 import {Button, Col, Row, Table} from "react-bootstrap";
 import axios from "axios";
 import {useUser} from "../../context/UserContext.tsx";
+import {useLocalStorage} from "../../hooks/useLocalStorage.ts";
 
 type Customer = {
     id: number,
@@ -14,17 +15,18 @@ type Customer = {
     product: Product
 }
 
-type OverviewProps = {
+type CustomerProps = {
     inventory: Inventory,
     markets: Market[],
     fetchInventory: () => void,
     fetchMarkets: () => void
 }
 
-export default function Customer(props: Readonly<OverviewProps>) {
-    const [customers, setCustomers] = useState<Customer[]>([]);
+export default function Customer(props: Readonly<CustomerProps>) {
+    const [customers, setCustomers] = useLocalStorage<Customer[]>('customers', []);
     const [error, setError] = useState<{ id:number, error: boolean }>({id: 0, error: false});
     const { userId } = useUser();
+    const [idCounter, setIdCounter] = useState<number>(1);
 
     function randomInt(min: number, max: number) {
         return Math.floor(Math.random() * (max - min + 1) + min);
@@ -36,9 +38,15 @@ export default function Customer(props: Readonly<OverviewProps>) {
     }
 
     function createCustomer() {
+        let newId = idCounter;
+        while(customers.some(customer => customer.id === newId)) {
+            newId++;
+        }
+        setIdCounter(newId + 1);
+
         const newCustomer = {
-            id: customers.length + 1,
-            quantity: randomInt(1, 5),
+            id: newId,
+            quantity: randomInt(1, 4),
             product: getRandomProduct(),
         }
         setCustomers([...customers, newCustomer]);
