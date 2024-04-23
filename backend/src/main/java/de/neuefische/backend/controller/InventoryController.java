@@ -1,6 +1,7 @@
 package de.neuefische.backend.controller;
 
 import de.neuefische.backend.model.Inventory;
+import de.neuefische.backend.model.StoreUpgrade;
 import de.neuefische.backend.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,8 @@ public class InventoryController {
     }
 
     @PutMapping("/{inventoryId}")
-    public Inventory addProductCategory(@PathVariable String inventoryId, @RequestBody String categoryToAdd){
-        return inventoryService.addProductCategory(inventoryId, categoryToAdd);
+    public Inventory addProductCategory(@PathVariable String inventoryId, @RequestBody StoreUpgrade storeUpgrade){
+        return inventoryService.addProductCategory(inventoryId, storeUpgrade);
     }
 
     @DeleteMapping("/{inventoryId}")

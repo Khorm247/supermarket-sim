@@ -2,6 +2,7 @@ package de.neuefische.backend.service;
 
 import de.neuefische.backend.model.*;
 import de.neuefische.backend.repository.InventoryRepository;
+import de.neuefische.backend.repository.MarketRepository;
 import de.neuefische.backend.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,10 @@ class InventoryServiceTest {
     private final ProductRepository mockProductRepository = mock(ProductRepository.class);
     private final ProductService productService = new ProductService(mockProductRepository);
 
-    private final InventoryService inventoryService = new InventoryService(mockInventoryRepository, productService);
+    private final MarketRepository mockMarketRepository = mock(MarketRepository.class);
+    private final MarketService marketService = new MarketService(mockMarketRepository);
+
+    private final InventoryService inventoryService = new InventoryService(mockInventoryRepository, productService, marketService);
 
 
     @Test
@@ -142,6 +146,11 @@ class InventoryServiceTest {
         // Given
         String inventoryId = "1";
         String category = "FRUITS";
+        StoreUpgrade storeUpgrade = StoreUpgrade.builder()
+                .upgradeName(category)
+                .newCapacity(100)
+                .upgradeCost(new BigDecimal(100))
+                .build();
         Inventory inventory = Inventory.builder()
                 .id(inventoryId)
                 .playerId("player1")
@@ -185,7 +194,7 @@ class InventoryServiceTest {
         when(mockProductRepository.findAll()).thenReturn(products);
         when(mockInventoryRepository.save(any())).thenReturn(expected);
 
-        Inventory actual = inventoryService.addProductCategory(inventoryId, category);
+        Inventory actual = inventoryService.addProductCategory(inventoryId, storeUpgrade);
         // Then
         assertEquals(expected, actual);
         verify(mockInventoryRepository).findById(inventoryId);

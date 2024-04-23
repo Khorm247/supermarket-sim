@@ -7,35 +7,50 @@ import NewProduct from "./pages/products/NewProduct.tsx";
 import useProduct from "./hooks/useProduct.ts";
 import EditProduct from "./pages/products/EditProduct.tsx";
 import DeleteProduct from "./pages/products/DeleteProduct.tsx";
-import Overview from "./pages/market/Overview.tsx";
+import Customer from "./pages/market/Customer.tsx";
 import InventoryList from "./pages/inventory/InventoryList.tsx";
 import Upgrade from "./pages/market/Upgrade.tsx";
 import {Product} from "./types/Product.ts";
-import {useState} from "react";
 import useInventory from "./hooks/useInventory.ts";
 import { ShoppingCartProvider } from "./context/ShoppingCartContext.tsx";
 import {ShoppingCart} from "./components/ShoppingCart.tsx";
+import useMarket from "./hooks/useMarket.ts";
+import {useUser} from "./context/UserContext.tsx";
+import {useEffect, useState} from "react";
+import StatusBar from "./components/StatusBar.tsx";
 
 export default function App() {
 
     const {products, saveProduct, updateProduct, deleteProduct} = useProduct();
     const [product, setProduct] = useState<Product>();
-    const {inventory, addCategory} = useInventory();
+    const {markets, fetchMarkets, upgradeStorage} = useMarket();
+    const {inventory, addCategory, fetchInventory} = useInventory(fetchMarkets);
+    const { setUserId } = useUser();
+
+    const simulateLogin = async () => {
+        if(markets.length === 0) return;
+        setUserId(markets[0].id)
+    };
+
+    useEffect(() => {
+        simulateLogin().then(() => console.log('Logged in'));
+    }, [markets]);
 
     return (
-        <ShoppingCartProvider>
+        <ShoppingCartProvider products={products} fetchInventory={fetchInventory} fetchMarkets={fetchMarkets}>
             <NavBar />
+            <StatusBar markets={markets}/>
             <Routes>
-                <Route path="/" element={<Overview/>} />
-                <Route path="/api/cart" element={<ShoppingCart isOpen={false}/>} />
+                <Route path="/" element={<Customer fetchMarkets={fetchMarkets} fetchInventory={fetchInventory} markets={markets} inventory={inventory}/>} />
+                <Route path="/api/cart" element={<ShoppingCart products={products} fetchInventory={fetchInventory} fetchMarkets={fetchMarkets} isOpen={false}/>}/>
                 <Route path="/api/inventory" element={<InventoryList inventory={inventory}/>}/>
-                <Route path="/api/markets" element={<MarketList/>}/>
+                <Route path="/api/markets" element={<MarketList markets={markets}/>}/>
                 <Route path="/api/products" element={<ProductList deleteProduct={setProduct} handleProduct={setProduct} products={products}/>}/>
                 <Route path="/api/products/new" element={<NewProduct saveProduct={saveProduct}/>}/>
                 <Route path="/api/products/:id" element={<h1>Home</h1>}/>
                 {product && <Route path="/api/products/:id/edit" element={<EditProduct product={product} updateProduct={updateProduct}/>}/>}
                 <Route path="/api/products/:id/delete" element={<DeleteProduct deleteProduct={deleteProduct}/>}/>
-                <Route path="/api/upgrade" element={<Upgrade addCategory={addCategory} inventory={inventory}/>}/>
+                <Route path="/api/upgrade" element={<Upgrade upgradeStorage={upgradeStorage} fetchMarkets={fetchMarkets} addCategory={addCategory} inventory={inventory}/>}/>
             </Routes>
         </ShoppingCartProvider>
     )

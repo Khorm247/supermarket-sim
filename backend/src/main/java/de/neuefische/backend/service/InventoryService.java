@@ -1,12 +1,10 @@
 package de.neuefische.backend.service;
 
-import de.neuefische.backend.model.Inventory;
-import de.neuefische.backend.model.InventoryItem;
-import de.neuefische.backend.model.Product;
-import de.neuefische.backend.model.ProductCategory;
+import de.neuefische.backend.model.*;
 import de.neuefische.backend.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.error.Mark;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -17,6 +15,7 @@ public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final ProductService productService;
+    private final MarketService marketService;
 
     public List<Inventory> getAllInventories() {
         return inventoryRepository.findAll();
@@ -61,9 +60,9 @@ public class InventoryService {
         return updatedInventory;
     }
 
-    public Inventory addProductCategory(String inventoryId, String category) {
+    public Inventory addProductCategory(String inventoryId, StoreUpgrade storeUpgrade) {
         Inventory inventory = getInventoryById(inventoryId);
-        ProductCategory categoryToAdd = ProductCategory.valueOf(category);
+        ProductCategory categoryToAdd = ProductCategory.valueOf(storeUpgrade.getUpgradeName());
 
         List<Product> products = productService.getAllProducts().stream()
                 .filter(product -> product.getCategory().equals(categoryToAdd))
@@ -81,8 +80,12 @@ public class InventoryService {
                         .build());
             }
         }
-
         inventory.setInventoryItems(oldInventoryItems);
+
+        Market market = marketService.getMarketById(inventory.getPlayerId());
+        market.setBalance(market.getBalance().subtract(storeUpgrade.getUpgradeCost()));
+        marketService.updateMarket(market);
+
         return updateInventory(inventory);
     }
 

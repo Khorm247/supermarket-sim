@@ -1,6 +1,8 @@
 import {Product} from "../../types/Product.ts";
-import {Button} from "react-bootstrap";
+import {Button, Stack, Table} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import {Gear, Trash} from "phosphor-react";
 
 type ProductListProps = {
     products: Product[],
@@ -21,20 +23,20 @@ export default function ProductList(props: Readonly<ProductListProps>) {
         navigate(`/api/products/${product.id}/delete`);
     }
     return (
-        <div>
+        <Container>
             <h1>Product List</h1>
-            <table className="table">
+            <Table className="table" bordered striped hover variant="dark" size="sm">
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Producer</th>
-                    <th>Category</th>
-                    <th>Price per Box</th>
-                    <th>Fair Market Value</th>
-                    <th>Your Price</th>
-                    <th>Items per Box</th>
-                    <th>Actions</th>
-                </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Producer</th>
+                        <th>Category</th>
+                        <th>Price per Box</th>
+                        <th>Fair Market Value</th>
+                        <th>Your Price</th>
+                        <th>Items per Box</th>
+                        <th>Actions</th>
+                    </tr>
                 </thead>
                 <tbody>
                 {props.products.map((product) => (
@@ -47,13 +49,15 @@ export default function ProductList(props: Readonly<ProductListProps>) {
                         <td>{product.yourPrice}</td>
                         <td>{product.itemsPerBox}</td>
                         <td>
-                            <Button onClick={() => handleEditClick(product)} size="sm" variant="outline-primary">Edit</Button>
-                            <Button onClick={() => handleDeleteClick(product)} size="sm" variant="danger">X</Button>
+                            <Stack direction={"horizontal"}>
+                                <Button onClick={() => handleEditClick(product)} size="sm" variant="outline-primary"><Gear size={20} /></Button>
+                                <Button onClick={() => handleDeleteClick(product)} size="sm" variant="danger"><Trash size={20} /></Button>
+                            </Stack>
                         </td>
                     </tr>
                 ))}
                 </tbody>
-            </table>
-        </div>
+            </Table>
+        </Container>
     )
 }

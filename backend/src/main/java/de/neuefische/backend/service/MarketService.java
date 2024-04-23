@@ -1,6 +1,7 @@
 package de.neuefische.backend.service;
 
 import de.neuefische.backend.model.Market;
+import de.neuefische.backend.model.StoreUpgrade;
 import de.neuefische.backend.repository.MarketRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,10 @@ public class MarketService {
 
     public List<Market> getAllMarkets() {
         return marketRepository.findAll();
+    }
+
+    public Market getMarketById(String marketId) {
+        return marketRepository.findById(marketId).orElseThrow();
     }
 
     public Market addNewMarket(String marketName) {
@@ -51,6 +56,10 @@ public class MarketService {
         return updatedMarket;
     }
 
+    public void updateMarket(Market market) {
+        marketRepository.save(market);
+    }
+
     public ResponseEntity<String> deleteMarket(String marketId) {
         if (!marketRepository.existsById(marketId)) {
             return new ResponseEntity<>("Market not found", HttpStatus.NOT_FOUND);
@@ -58,5 +67,29 @@ public class MarketService {
 
         marketRepository.deleteById(marketId);
         return new ResponseEntity<>("Market deleted", HttpStatus.OK);
+    }
+
+    public String upgradeStore(String marketId, StoreUpgrade storeUpgrade) {
+        Market market = getMarketById(marketId);
+        if (market.getBalance().compareTo(storeUpgrade.getUpgradeCost()) < 0) {
+            return "Not enough money";
+        }
+
+        Market updatedMarket = Market.builder()
+                .id(marketId)
+                .name(market.getName())
+                .balance(market.getBalance().subtract(storeUpgrade.getUpgradeCost()))
+                .currentShelfSpace(market.getCurrentShelfSpace())
+                .maximumShelfSpace(market.getMaximumShelfSpace())
+                .currentStorage(market.getCurrentStorage())
+                .maximumStorage(market.getMaximumStorage())
+                .products(market.getProducts())
+                .build();
+
+        // check which upgrade is being made and update the market accordingly
+        updatedMarket.setMaximumStorage(updatedMarket.getMaximumStorage() + storeUpgrade.getNewCapacity());
+
+        marketRepository.save(updatedMarket);
+        return "Store upgraded";
     }
 }

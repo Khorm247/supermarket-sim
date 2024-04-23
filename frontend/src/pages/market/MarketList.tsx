@@ -1,21 +1,18 @@
+import { Table } from "react-bootstrap";
 import {Market} from "../../types/Market.ts";
-import {useEffect, useState} from "react";
-import MarketService from "../../services/MarketService.tsx";
+import Container from "react-bootstrap/Container";
 
-const marketService = new MarketService();
-export default function ProductList() {
-    const [markets, setMarkets] = useState<Market[]>([]);
+type MarketListProps = {
+    markets: Market[]
+}
 
-    useEffect(() => {
-        marketService.getAllMarkets().then((response) => {
-            setMarkets(response.data);
-        });
-    }, []);
+
+export default function MarketList(props: Readonly<MarketListProps>) {
 
     return (
-        <div>
+        <Container>
             <h1>Market List</h1>
-            <table className="table">
+            <Table className="table" striped bordered hover variant="dark" size="sm">
                 <thead>
                 <tr>
                     <th>Market Name</th>
@@ -27,7 +24,7 @@ export default function ProductList() {
                 </tr>
                 </thead>
                 <tbody>
-                {markets.map((market) => (
+                {props.markets.map((market) => (
                     <tr key={market.id}>
                         <td>{market.name}</td>
                         <td>{market.balance}</td>
@@ -38,7 +35,7 @@ export default function ProductList() {
                     </tr>
                 ))}
                 </tbody>
-            </table>
-        </div>
+            </Table>
+        </Container>
     )
 }
