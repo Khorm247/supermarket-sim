@@ -52,7 +52,7 @@ export function ShoppingCart(props: Readonly<ShoppingCartProps>) {
     }
 
     return (
-        <Offcanvas show={props.isOpen} onHide={closeCart} placement="end">
+        <Offcanvas className={"bg-dark-subtle"} show={props.isOpen} onHide={closeCart} placement="end">
             <Offcanvas.Header closeButton>
                 <Offcanvas.Title>Cart</Offcanvas.Title>
             </Offcanvas.Header>

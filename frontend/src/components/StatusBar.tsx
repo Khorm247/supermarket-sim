@@ -21,7 +21,7 @@ export default function StatusBar(props: Readonly<StatusBarProps>) {
     }, [props.markets, userId]);
 
     return (
-        <Container className="align-self-center rounded-bottom bg-body-secondary">
+        <Container className="align-self-center rounded-bottom bg-body-secondary" style={{position: 'sticky', top: '80px', zIndex: '1'}}>
             {
                 (market == null) ? <p>Loading...</p>
                     :
